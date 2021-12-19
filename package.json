@@ -1,0 +1,13 @@
+{
+  "name": "cairomate",
+  "version": "1.0.0",
+  "description": "Structured, dependable legos for starknet development.",
+  "main": "index.js",
+  "repository": "https://github.com/a5f9t4/cairomate.git",
+  "author": "Alucard <https://github.com/a5f9t4>",
+  "license": "The Unlicense",
+  "private": false,
+  "scripts": {
+
+  }
+}
