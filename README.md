@@ -3,11 +3,13 @@
 
 **Structured**, **dependable** legos for starknet development.
 
-## Contracts
+## Directory Structure
 
 ```ml
-src
+contracts
 ├─ Ownable — "Minimal, ownable contract instance"
+tests
+├─ test_Ownable - "Test Ownable contract"
 ```
 
 ## Installation
