@@ -1,0 +1,13 @@
+[
+    {
+        "inputs": [
+            {
+                "name": "owner_address",
+                "type": "felt"
+            }
+        ],
+        "name": "constructor",
+        "outputs": [],
+        "type": "constructor"
+    }
+]
