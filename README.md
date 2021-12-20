@@ -1,4 +1,4 @@
-# cairomate • [![Tests](https://github.com/OpenZeppelin/cairo-contracts/actions/workflows/tests.yml/badge.svg)](https://github.com/OpenZeppelin/cairo-contracts/actions/workflows/tests.yml) [![Lints](https://github.com/OpenZeppelin/cairo-contracts/actions/workflows/lints.yml/badge.svg)](https://github.com/OpenZeppelin/cairo-contracts/actions/workflows/lints.yml)
+# cairomate • [![Tests](https://github.com/a5f9t4/cairo-contracts/actions/workflows/tests.yml/badge.svg)](https://github.com/a5f9t4/cairo-contracts/actions/workflows/tests.yml) [![Lints](https://github.com/a5f9t4/cairo-contracts/actions/workflows/lints.yml/badge.svg)](https://github.com/a5f9t4/cairo-contracts/actions/workflows/lints.yml)
 
 
 **Structured**, **dependable** legos for starknet development.
