@@ -35,16 +35,30 @@ end
 func public_key() -> (res: felt):
 end
 
-#
-# Guards
-#
+#############################################
+##               CONSTRUCTOR               ##
+#############################################
+
+@constructor
+func constructor{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(_public_key: felt):
+    public_key.write(_public_key)
+    return()
+end
+
+#############################################
+##                MODIFIERS                ##
+#############################################
 
 @view
 func assert_only_self{
-        syscall_ptr : felt*, 
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }():
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}():
     let (self) = get_contract_address()
     let (caller) = get_caller_address()
     assert self = caller
@@ -75,9 +89,9 @@ func get_nonce{
     return (res=res)
 end
 
-#
-# Setters
-#
+#############################################
+##                 MUTATORS                ##
+#############################################
 
 @external
 func set_public_key{
@@ -88,20 +102,6 @@ func set_public_key{
     assert_only_self()
     public_key.write(new_public_key)
     return ()
-end
-
-#############################################
-##                 MUTATORS                ##
-#############################################
-
-@constructor
-func constructor{
-    syscall_ptr: felt*,
-    pedersen_ptr: HashBuiltin*,
-    range_check_ptr
-}(_public_key: felt):
-    public_key.write(_public_key)
-    return()
 end
 
 #############################################

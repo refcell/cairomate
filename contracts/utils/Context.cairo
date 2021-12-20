@@ -7,6 +7,7 @@ from starkware.starknet.common.syscalls import (
 
 ## @title Context
 ## @description A mirror of the Openzeppelin Context pattern.
+## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
 ## @description https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Context.sol
 ## @description sry @t11s know ur not a fan
 ## @author Alucard <github.com/a5f9t4>

@@ -3,10 +3,23 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 
+## @title Ownable
+## @description A mirror of the Openzeppelin Ownable pattern
+## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
+## @author Alucard <github.com/a5f9t4>
+
+#############################################
+##                STORAGE                  ##
+#############################################
+
 ## The contract owner ##
 @storage_var
 func OWNER() -> (owner : felt):
 end
+
+#############################################
+##              CONSTRUCTOR                ##
+#############################################
 
 ## Sets the contract owner as the `owner` parameter ##
 @constructor
@@ -20,6 +33,10 @@ func constructor{
     OWNER.write(owner)
     return ()
 end
+
+#############################################
+##              OWNABLE LOGIC              ##
+#############################################
 
 @external
 func get_owner{
