@@ -1,17 +1,13 @@
 %lang starknet
-%builtins pedersen range_check
+%builtins pedersen range_check ecdsa
 
+from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 from starkware.starknet.common.syscalls import get_caller_address
-from starkware.cairo.common.cairo_builtins import HashBuiltin
-from starkware.cairo.common.hash import hash2
-from starkware.cairo.common.math import assert_le, assert_nn_le, unsigned_div_rem, assert_not_zero
-from starkware.starknet.common.syscalls import storage_read, storage_write
-from starkware.cairo.common.uint256 import (
-    Uint256, uint256_add, uint256_sub, uint256_le, uint256_lt, uint256_check
-)
+from starkware.cairo.common.math import assert_nn_le, assert_not_zero
+from starkware.cairo.common.uint256 import Uint256, uint256_le, uint256_sub, uint256_add
 
-## @title ERC20
-## @description A minimalistic implementation of ERC20 Token Standard.
+## @title ERC721
+## @description A minimalistic implementation of ERC721 Token Standard.
 ## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
 ## @author Alucard <github.com/a5f9t4>
 
@@ -28,11 +24,11 @@ func SYMBOL() -> (SYMBOL: felt):
 end
 
 @storage_var
-func DECIMALS() -> (DECIMALS: felt):
+func BASE_URI() -> (BASE_URI: felt):
 end
 
 #############################################
-##               ERC20 STORE               ##
+##                 STORAGE                 ##
 #############################################
 
 @storage_var
@@ -40,11 +36,23 @@ func TOTAL_SUPPLY() -> (TOTAL_SUPPLY: Uint256):
 end
 
 @storage_var
-func BALANCE_OF(account: felt) -> (BALANCE: Uint256):
+func OWNER(token_id: felt) -> (res: felt):
+end
+
+@storage_var
+func BALANCES(owner: felt) -> (res: Uint256):
+end
+
+@storage_var
+func TOKEN_APPROVALS(token_id: felt) -> (res: felt):
 end
 
 @storage_var
 func ALLOWANCE(owner: felt, spender: felt) -> (REMAINING: Uint256):
+end
+
+@storage_var
+func INITIALIZED() -> (res: felt):
 end
 
 #############################################
@@ -53,11 +61,15 @@ end
 
 ## TODO: EIP-2612
 
-#     bytes32 public constant PERMIT_TYPEHASH =
-#         keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
-#     uint256 internal immutable INITIAL_CHAIN_ID;
-#     bytes32 internal immutable INITIAL_DOMAIN_SEPARATOR;
-#     mapping(address => uint256) public nonces;
+# bytes32 public constant PERMIT_TYPEHASH =
+#     keccak256("Permit(address spender,uint256 tokenId,uint256 nonce,uint256 deadline)");
+# bytes32 public constant PERMIT_ALL_TYPEHASH =
+#     keccak256("Permit(address owner,address spender,uint256 nonce,uint256 deadline)");
+# uint256 internal immutable INITIAL_CHAIN_ID;
+# bytes32 internal immutable INITIAL_DOMAIN_SEPARATOR;
+# mapping(uint256 => uint256) public nonces;
+# mapping(address => uint256) public noncesForAll;
+
 
 #############################################
 ##               CONSTRUCTOR               ##
@@ -71,18 +83,35 @@ func constructor{
 }(
     name: felt,
     symbol: felt,
-    decimals: felt, # 18
-    totalSupply: Uint256,
+    base_uri: felt,
+    totalSupply: Uint256
 ):
     NAME.write(name)
     SYMBOL.write(symbol)
-    DECIMALS.write(decimals)
-    TOTAL_SUPPLY.write(totalSupply)
+    BASE_URI.write(base_uri)
+    # TOTAL_SUPPLY.write(totalSupply)
+
+    ## Mint the total supply of tokens to the creator ##
+    let (caller) = get_caller_address()
+    _mint(caller, totalSupply)
+
+    return()
+end
+
+@external
+func initialize{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}():
+    let (_initialized) = INITIALIZED.read()
+    assert _initialized = 0
+    INITIALIZED.write(1)
     return ()
 end
 
 #############################################
-##               ERC20 LOGIC               ##
+##              ERC721 LOGIC               ##
 #############################################
 
 @external
@@ -91,78 +120,27 @@ func approve{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }(
-    spender: felt,
-    amount: Uint256
-) -> (success: felt):
-    ## Manually fetch the caller address ##
+    to: felt,
+    token_id: felt
+):
+    alloc_locals
+    let (_owner) = OWNER.read(token_id)
+    let (local res) = TOKEN_APPROVALS.read(token_id)
     let (caller) = get_caller_address()
 
-    ## CHECKS ##
-    assert_not_zero(caller)
-    assert_not_zero(spender)
-    uint256_check(amount)
+    if caller == _owner:
+        return ()
+    end
 
-    ## EFFECTS ##
-    ALLOWANCE.write(caller, spender, amount)
+    if _owner == to:
+        assert 1 = 0
+    end
 
-    ## NO INTERACTIONS ##
+    assert res = caller
 
-    return (1) # Starknet's `true`
+    TOKEN_APPROVALS.write(token_id, to)
+    return ()
 end
-
-@external
-func increaseAllowance{
-    syscall_ptr: felt*,
-    pedersen_ptr: HashBuiltin*,
-    range_check_ptr
-}(
-    spender: felt,
-    amount: Uint256
-) -> (success: felt):
-    alloc_locals
-    uint256_check(amount)
-    let (local caller) = get_caller_address()
-    let (local current_allowance: Uint256) = ALLOWANCE.read(caller, spender)
-
-    ## Check allowance overflow ##
-    let (local new_allowance: Uint256, is_overflow) = uint256_add(current_allowance, amount)
-    assert (is_overflow) = 0
-
-    assert_not_zero(caller)
-    assert_not_zero(spender)
-    uint256_check(amount)
-    ALLOWANCE.write(caller, spender, amount)
-
-    return (1) # Starknet's `true`
-end
-
-@external
-func decreaseAllowance{
-    syscall_ptr: felt*,
-    pedersen_ptr: HashBuiltin*,
-    range_check_ptr
-}(
-    spender: felt,
-    amount: Uint256
-) -> (success: felt):
-    alloc_locals
-    uint256_check(amount)
-    let (local caller) = get_caller_address()
-    let (local current_allowance: Uint256) = ALLOWANCE.read(caller, spender)
-    let (local new_allowance: Uint256) = uint256_sub(current_allowance, amount)
-
-    ## Validate allowance decrease ##
-    let (enough_allowance) = uint256_lt(new_allowance, current_allowance)
-    assert_not_zero(enough_allowance)
-
-    assert_not_zero(caller)
-    assert_not_zero(spender)
-    uint256_check(amount)
-    ALLOWANCE.write(caller, spender, amount)
-
-    return (1) # Starknet's `true`
-end
-
 
 @external
 func transfer{
@@ -172,11 +150,10 @@ func transfer{
 }(
     recipient: felt,
     amount: Uint256
-) -> (success: felt):
+):
     let (sender) = get_caller_address()
     _transfer(sender, recipient, amount)
-
-    return (1) # Starknet's `true`
+    return ()
 end
 
 @external
@@ -188,12 +165,11 @@ func transferFrom{
     sender: felt,
     recipient: felt,
     amount: Uint256
-) -> (success: felt):
+):
     alloc_locals
     let (local caller) = get_caller_address()
-    let (local caller_allowance: Uint256) = ALLOWANCE.read(owner=sender, spender=caller)
+    let (local caller_allowance) = ALLOWANCE.read(owner=sender, spender=caller)
 
-    ## Validate allowance decrease ##
     let (enough_allowance) = uint256_le(amount, caller_allowance)
     assert_not_zero(enough_allowance)
 
@@ -202,11 +178,52 @@ func transferFrom{
     # subtract allowance
     let (new_allowance: Uint256) = uint256_sub(caller_allowance, amount)
     ALLOWANCE.write(sender, caller, new_allowance)
-
-    return (1) # Starknet's `true`
+    return ()
 end
 
-## INTERNAL TRANSFER LOGIC ##
+#############################################
+##             INTERNAL LOGIC              ##
+#############################################
+
+func _is_approved_or_owner{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    to: felt,
+    token_id: felt
+):
+    alloc_locals
+    let (local res) = TOKEN_APPROVALS.read(token_id)
+    let (caller) = get_caller_address()
+    let (_owner) = OWNER.read(token_id)
+
+    if caller == _owner:
+        return ()
+    end
+
+    assert res = caller
+    return ()
+end
+
+func _mint{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    recipient: felt,
+    amount: Uint256
+):
+    let (res) = BALANCES.read(owner=recipient)
+    let (new_balance, _: Uint256) = uint256_add(res, amount)
+    BALANCES.write(recipient, new_balance)
+
+    let (supply) = TOTAL_SUPPLY.read()
+    let (new_supply, _: Uint256) = uint256_add(supply, amount)
+    TOTAL_SUPPLY.write(new_supply)
+    return ()
+end
+
 func _transfer{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
@@ -217,27 +234,18 @@ func _transfer{
     amount: Uint256
 ):
     alloc_locals
+    let (local sender_balance) = BALANCES.read(owner=sender)
 
-    ## CHECKS ##
-    assert_not_zero(sender)
-    assert_not_zero(recipient)
-    uint256_check(amount)
-
-    let (local sender_balance: Uint256) = BALANCE_OF.read(account=sender)
     let (enough_balance) = uint256_le(amount, sender_balance)
     assert_not_zero(enough_balance)
 
-    ## EFFECTS ##
-    ## Subtract from sender ##
     let (new_sender_balance: Uint256) = uint256_sub(sender_balance, amount)
-    BALANCE_OF.write(sender, new_sender_balance)
+    BALANCES.write(sender, new_sender_balance)
 
     ## Add to recipient ##
-    let (recipient_balance: Uint256) = BALANCE_OF.read(account=recipient)
+    let (recipient_balance: Uint256) = BALANCES.read(recipient)
     let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, amount)
-    BALANCE_OF.write(recipient, new_recipient_balance)
-
-    ## NO INTERACTIONS ##
+    BALANCES.write(recipient, new_recipient_balance)
 
     return ()
 end
@@ -267,6 +275,16 @@ func symbol{
 end
 
 @view
+func baseURI{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}() -> (base_uri: felt):
+    let (_base_uri) = BASE_URI.read()
+    return (base_uri=_base_uri)
+end
+
+@view
 func totalSupply{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
@@ -277,14 +295,15 @@ func totalSupply{
 end
 
 @view
-func decimals{
+func ownerOf{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}() -> (decimals: felt):
-    let (_decimals) = DECIMALS.read()
-    return (decimals=_decimals)
+}(token_id: felt) -> (res: felt):
+    let (res) = OWNER.read(token_id=token_id)
+    return (res)
 end
+
 
 @view
 func balanceOf{
@@ -292,7 +311,7 @@ func balanceOf{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }(account: felt) -> (balance: Uint256):
-    let (_balance: Uint256) = BALANCE_OF.read(account=account)
+    let (_balance: Uint256) = BALANCES.read(owner=account)
     return (balance=_balance)
 end
 
@@ -307,4 +326,16 @@ func allowance{
 ) -> (remaining: Uint256):
     let (REMAINING: Uint256) = ALLOWANCE.read(owner=owner, spender=spender)
     return (remaining=REMAINING)
+end
+
+@view
+func getApproved{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    token_id: felt
+) -> (res: felt):
+    let (res) = TOKEN_APPROVALS.read(token_id=token_id)
+    return (res)
 end
