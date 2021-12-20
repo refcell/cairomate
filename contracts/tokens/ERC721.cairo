@@ -89,7 +89,7 @@ func constructor{
     NAME.write(name)
     SYMBOL.write(symbol)
     BASE_URI.write(base_uri)
-    TOTAL_SUPPLY.write(totalSupply)
+    # TOTAL_SUPPLY.write(totalSupply)
 
     ## Mint the total supply of tokens to the creator ##
     let (caller) = get_caller_address()
@@ -272,6 +272,16 @@ func symbol{
 }() -> (symbol: felt):
     let (_symbol) = SYMBOL.read()
     return (symbol=_symbol)
+end
+
+@view
+func baseURI{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}() -> (base_uri: felt):
+    let (_base_uri) = BASE_URI.read()
+    return (base_uri=_base_uri)
 end
 
 @view
