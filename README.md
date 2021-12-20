@@ -7,7 +7,12 @@
 
 ```ml
 contracts
-├─ Ownable — "Minimal, ownable contract instance"
+├─ utils
+   ├─ Account — "Stripped account"
+   ├─ Ownable — "Minimal, ownable contract instance"
+   ├─ Context — "Port of OZ's Solidity Context Abstraction"
+├─ tokens
+   ├─ ERC20 — "Modern and gas efficient ERC20 + EIP-2612 implementation"
 tests
 ├─ test_Ownable - "Test Ownable contract"
 ```

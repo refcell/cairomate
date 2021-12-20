@@ -1,0 +1,13 @@
+[
+    {
+        "inputs": [],
+        "name": "_msgSender",
+        "outputs": [
+            {
+                "name": "sender",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    }
+]

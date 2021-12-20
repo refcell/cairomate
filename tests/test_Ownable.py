@@ -13,12 +13,12 @@ def event_loop():
 async def ownable_factory():
     starknet = await Starknet.empty()
     owner = await starknet.deploy(
-        "contracts/Account.cairo",
+        "contracts/utils/Account.cairo",
         constructor_calldata=[signer.public_key]
     )
 
     ownable = await starknet.deploy(
-        "contracts/Ownable.cairo",
+        "contracts/utils/Ownable.cairo",
         constructor_calldata=[owner.contract_address]
     )
     return starknet, ownable, owner

@@ -1,6 +1,7 @@
 %lang starknet
 %builtins pedersen range_check
 
+from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.starknet.common.syscalls import (
     get_contract_address)
 
@@ -12,7 +13,11 @@ from starkware.starknet.common.syscalls import (
 
 ## Returns the caller ##
 @external
-func _msgSender() -> (sender: felt):
+func _msgSender{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}() -> (sender: felt):
     let (sender) = get_contract_address()
     return (sender=sender)
 end

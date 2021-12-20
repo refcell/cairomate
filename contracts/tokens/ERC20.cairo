@@ -35,29 +35,28 @@ end
 #############################################
 
 @storage_var
-func TOTAL_SUPPLY() -> (TOTAL_SUPPLY: felt):
+func TOTAL_SUPPLY() -> (TOTAL_SUPPLY: Uint256):
 end
 
 @storage_var
-func BALANCE_OF(address: felt) -> (BALANCE: felt):
+func BALANCE_OF(account: felt) -> (BALANCE: Uint256):
 end
 
 @storage_var
-func ALLOWANCE(owner: felt, spender: felt) -> (REMAINING: felt):
+func ALLOWANCE(owner: felt, spender: felt) -> (REMAINING: Uint256):
 end
 
 #############################################
 ##             EIP 2612 STORE              ##
 #############################################
 
-bytes32 public constant PERMIT_TYPEHASH =
-        keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
+## TODO: EIP-2612
 
-    uint256 internal immutable INITIAL_CHAIN_ID;
-
-    bytes32 internal immutable INITIAL_DOMAIN_SEPARATOR;
-
-    mapping(address => uint256) public nonces;
+#     bytes32 public constant PERMIT_TYPEHASH =
+#         keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
+#     uint256 internal immutable INITIAL_CHAIN_ID;
+#     bytes32 internal immutable INITIAL_DOMAIN_SEPARATOR;
+#     mapping(address => uint256) public nonces;
 
 #############################################
 ##               CONSTRUCTOR               ##
@@ -71,13 +70,14 @@ func constructor{
 }(
     name: felt,
     symbol: felt,
-    decimals: felt,
-    totalSupply: felt,
+    decimals: felt, # 18
+    totalSupply: Uint256,
 ):
-    name.write(name);
-    symbol.write(symbol);
-    decimals.write(decimals);
-    totalSupply.write(totalSupply);
+    NAME.write(name)
+    SYMBOL.write(symbol)
+    DECIMALS.write(decimals)
+    TOTAL_SUPPLY.write(totalSupply)
+    return ()
 end
 
 #############################################
@@ -119,12 +119,12 @@ func increaseAllowance{
     amount: Uint256
 ) -> (success: felt):
     alloc_locals
-    uint256_check(added_value)
+    uint256_check(amount)
     let (local caller) = get_caller_address()
     let (local current_allowance: Uint256) = ALLOWANCE.read(caller, spender)
 
     ## Check allowance overflow ##
-    let (local new_allowance: Uint256, is_overflow) = uint256_add(current_allowance, added_value)
+    let (local new_allowance: Uint256, is_overflow) = uint256_add(current_allowance, amount)
     assert (is_overflow) = 0
 
     assert_not_zero(caller)
@@ -142,13 +142,13 @@ func decreaseAllowance{
     range_check_ptr
 }(
     spender: felt,
-    subtracted_value: Uint256
+    amount: Uint256
 ) -> (success: felt):
     alloc_locals
-    uint256_check(subtracted_value)
+    uint256_check(amount)
     let (local caller) = get_caller_address()
     let (local current_allowance: Uint256) = ALLOWANCE.read(caller, spender)
-    let (local new_allowance: Uint256) = uint256_sub(current_allowance, subtracted_value)
+    let (local new_allowance: Uint256) = uint256_sub(current_allowance, amount)
 
     ## Validate allowance decrease ##
     let (enough_allowance) = uint256_lt(new_allowance, current_allowance)
@@ -251,8 +251,8 @@ func name{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }() -> (name: felt):
-    let (NAME) = NAME.read()
-    return (name=NAME)
+    let (_name) = NAME.read()
+    return (name=_name)
 end
 
 @view
@@ -261,8 +261,8 @@ func symbol{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }() -> (symbol: felt):
-    let (SYMBOL) = SYMBOL.read()
-    return (symbol=SYMBOL)
+    let (_symbol) = SYMBOL.read()
+    return (symbol=_symbol)
 end
 
 @view
@@ -271,8 +271,8 @@ func totalSupply{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }() -> (totalSupply: Uint256):
-    let (TOTAL_SUPPLY: Uint256) = TOTAL_SUPPLY.read()
-    return (totalSupply=TOTAL_SUPPLY)
+    let (_total_supply: Uint256) = TOTAL_SUPPLY.read()
+    return (totalSupply=_total_supply)
 end
 
 @view
@@ -281,8 +281,8 @@ func decimals{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }() -> (decimals: felt):
-    let (DECIMALS) = DECIMALS.read()
-    return (decimals=DECIMALS)
+    let (_decimals) = DECIMALS.read()
+    return (decimals=_decimals)
 end
 
 @view
@@ -291,8 +291,8 @@ func balanceOf{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }(account: felt) -> (balance: Uint256):
-    let (BALANCE: Uint256) = BALANCE_OF.read(account=account)
-    return (balance=BALANCE)
+    let (_balance: Uint256) = BALANCE_OF.read(account=account)
+    return (balance=_balance)
 end
 
 @view
