@@ -3,7 +3,8 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 from starkware.starknet.common.syscalls import get_caller_address
-from starkware.cairo.common.math import assert_nn_le
+from starkware.cairo.common.math import assert_nn_le, assert_not_zero
+from starkware.cairo.common.uint256 import Uint256, uint256_le, uint256_sub, uint256_add
 
 ## @title ERC721
 ## @description A minimalistic implementation of ERC721 Token Standard.
@@ -19,7 +20,11 @@ func OWNER(token_id: felt) -> (res: felt):
 end
 
 @storage_var
-func BALANCES(owner: felt) -> (res: felt):
+func BALANCES(owner: felt) -> (res: Uint256):
+end
+
+@storage_var
+func TOTAL_SUPPLY() -> (TOTAL_SUPPLY: Uint256):
 end
 
 @storage_var
@@ -27,7 +32,7 @@ func TOKEN_APPROVALS(token_id: felt) -> (res: felt):
 end
 
 @storage_var
-func OPERATOR_APPROVALS(owner: felt, operator: felt) -> (res: felt):
+func ALLOWANCE(owner: felt, spender: felt) -> (REMAINING: Uint256):
 end
 
 @storage_var
@@ -38,14 +43,14 @@ end
 ##               CONSTRUCTOR               ##
 #############################################
 
-@constsructor
+@constructor
 func constructor{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }(recipient: felt):
     let (recipient) = get_caller_address()
-    _mint(recipient, 1000)
+    # _mint(recipient, 1000)
     return()
 end
 
@@ -55,9 +60,9 @@ func initialize{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }():
-    let (_initialized) = initialized.read()
+    let (_initialized) = INITIALIZED.read()
     assert _initialized = 0
-    initialized.write(1)
+    INITIALIZED.write(1)
     return ()
 end
 
@@ -70,7 +75,7 @@ func balance_of{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}(owner: felt) -> (res: felt):
+}(owner: felt) -> (res: Uint256):
     let (res) = BALANCES.read(owner=owner)
     return (res)
 end
@@ -110,14 +115,22 @@ func approve{
     to: felt,
     token_id: felt
 ):
+    alloc_locals
     let (_owner) = OWNER.read(token_id)
+    let (local res) = TOKEN_APPROVALS.read(token_id)
+    let (caller) = get_caller_address()
+
+    if caller == _owner:
+        return ()
+    end
 
     if _owner == to:
         assert 1 = 0
     end
 
-    _is_approved_or_owner()
-    TOKEN_APPROVALS.write(token_id=token_id, to)
+    assert res = caller
+
+    TOKEN_APPROVALS.write(token_id, to)
     return ()
 end
 
@@ -128,7 +141,7 @@ func transfer{
     range_check_ptr
 }(
     recipient: felt,
-    amount: felt
+    amount: Uint256
 ):
     let (sender) = get_caller_address()
     _transfer(sender, recipient, amount)
@@ -143,13 +156,20 @@ func transfer_from{
 }(
     sender: felt,
     recipient: felt,
-    amount: felt
+    amount: Uint256
 ):
-    let (caller) = get_caller_address()
-    let (caller_allowance) = ALLOWANCE.read(owner=sender, spender=caller)
-    assert_nn_le(amount, caller_allowance)
+    alloc_locals
+    let (local caller) = get_caller_address()
+    let (local caller_allowance) = ALLOWANCE.read(owner=sender, spender=caller)
+
+    let (enough_allowance) = uint256_le(amount, caller_allowance)
+    assert_not_zero(enough_allowance)
+
     _transfer(sender, recipient, amount)
-    ALLOWANCE.write(sender, caller, caller_allowance - amount)
+
+    # subtract allowance
+    let (new_allowance: Uint256) = uint256_sub(caller_allowance, amount)
+    ALLOWANCE.write(sender, caller, new_allowance)
     return ()
 end
 
@@ -165,6 +185,8 @@ func _is_approved_or_owner{
     to: felt,
     token_id: felt
 ):
+    alloc_locals
+    let (local res) = TOKEN_APPROVALS.read(token_id)
     let (caller) = get_caller_address()
     let (_owner) = OWNER.read(token_id)
 
@@ -172,8 +194,8 @@ func _is_approved_or_owner{
         return ()
     end
 
-    let (res) = TOKEN_APPROVALS(token_id)
     assert res = caller
+    return ()
 end
 
 func _mint{
@@ -182,13 +204,15 @@ func _mint{
     range_check_ptr
 }(
     recipient: felt,
-    amount: felt
+    amount: Uint256
 ):
-    let (res) = BALANCES.read(user=recipient)
-    BALANCES.write(recipient, res + amount)
+    let (res) = BALANCES.read(owner=recipient)
+    let (new_balance, _: Uint256) = uint256_add(res, amount)
+    BALANCES.write(recipient, new_balance)
 
     let (supply) = TOTAL_SUPPLY.read()
-    TOTAL_SUPPLY.write(supply + amount)
+    let (new_supply, _: Uint256) = uint256_add(supply, amount)
+    TOTAL_SUPPLY.write(new_supply)
     return ()
 end
 
@@ -199,14 +223,21 @@ func _transfer{
 }(
     sender: felt,
     recipient: felt,
-    amount: felt
+    amount: Uint256
 ):
-    let (sender_balance) = BALANCES.read(user=sender)
-    assert_nn_le(amount, sender_balance)
+    alloc_locals
+    let (local sender_balance) = BALANCES.read(owner=sender)
 
-    BALANCES.write(sender, sender_balance - amount)
+    let (enough_balance) = uint256_le(amount, sender_balance)
+    assert_not_zero(enough_balance)
 
-    let (res) = BALANCES.read(user=recipient)
-    BALANCES.write(recipient, res + amount)
+    let (new_sender_balance: Uint256) = uint256_sub(sender_balance, amount)
+    BALANCES.write(sender, new_sender_balance)
+
+    ## Add to recipient ##
+    let (recipient_balance: Uint256) = BALANCES.read(recipient)
+    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, amount)
+    BALANCES.write(recipient, new_recipient_balance)
+
     return ()
 end
