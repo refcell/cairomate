@@ -16,15 +16,31 @@ from starkware.cairo.common.uint256 import Uint256, uint256_le, uint256_sub, uin
 #############################################
 
 @storage_var
+func NAME() -> (NAME: felt):
+end
+
+@storage_var
+func SYMBOL() -> (SYMBOL: felt):
+end
+
+@storage_var
+func BASE_URI() -> (BASE_URI: felt):
+end
+
+#############################################
+##                 STORAGE                 ##
+#############################################
+
+@storage_var
+func TOTAL_SUPPLY() -> (TOTAL_SUPPLY: Uint256):
+end
+
+@storage_var
 func OWNER(token_id: felt) -> (res: felt):
 end
 
 @storage_var
 func BALANCES(owner: felt) -> (res: Uint256):
-end
-
-@storage_var
-func TOTAL_SUPPLY() -> (TOTAL_SUPPLY: Uint256):
 end
 
 @storage_var
@@ -40,6 +56,22 @@ func INITIALIZED() -> (res: felt):
 end
 
 #############################################
+##             EIP 2612 STORE              ##
+#############################################
+
+## TODO: EIP-2612
+
+# bytes32 public constant PERMIT_TYPEHASH =
+#     keccak256("Permit(address spender,uint256 tokenId,uint256 nonce,uint256 deadline)");
+# bytes32 public constant PERMIT_ALL_TYPEHASH =
+#     keccak256("Permit(address owner,address spender,uint256 nonce,uint256 deadline)");
+# uint256 internal immutable INITIAL_CHAIN_ID;
+# bytes32 internal immutable INITIAL_DOMAIN_SEPARATOR;
+# mapping(uint256 => uint256) public nonces;
+# mapping(address => uint256) public noncesForAll;
+
+
+#############################################
 ##               CONSTRUCTOR               ##
 #############################################
 
@@ -48,9 +80,21 @@ func constructor{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}(recipient: felt):
-    let (recipient) = get_caller_address()
-    # _mint(recipient, 1000)
+}(
+    name: felt,
+    symbol: felt,
+    base_uri: felt,
+    totalSupply: Uint256
+):
+    NAME.write(name)
+    SYMBOL.write(symbol)
+    BASE_URI.write(base_uri)
+    TOTAL_SUPPLY.write(totalSupply)
+
+    ## Mint the total supply of tokens to the creator ##
+    let (caller) = get_caller_address()
+    _mint(caller, totalSupply)
+
     return()
 end
 
@@ -64,42 +108,6 @@ func initialize{
     assert _initialized = 0
     INITIALIZED.write(1)
     return ()
-end
-
-#############################################
-##                ACCESSORS                ##
-#############################################
-
-@view
-func balance_of{
-    syscall_ptr: felt*,
-    pedersen_ptr: HashBuiltin*,
-    range_check_ptr
-}(owner: felt) -> (res: Uint256):
-    let (res) = BALANCES.read(owner=owner)
-    return (res)
-end
-
-@view
-func owner_of{
-    syscall_ptr: felt*,
-    pedersen_ptr: HashBuiltin*,
-    range_check_ptr
-}(token_id: felt) -> (res: felt):
-    let (res) = OWNER.read(token_id=token_id)
-    return (res)
-end
-
-@view
-func get_approved{
-    syscall_ptr: felt*,
-    pedersen_ptr: HashBuiltin*,
-    range_check_ptr
-}(
-    token_id: felt
-) -> (res: felt):
-    let (res) = TOKEN_APPROVALS.read(token_id=token_id)
-    return (res)
 end
 
 #############################################
@@ -149,7 +157,7 @@ func transfer{
 end
 
 @external
-func transfer_from{
+func transferFrom{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
@@ -240,4 +248,84 @@ func _transfer{
     BALANCES.write(recipient, new_recipient_balance)
 
     return ()
+end
+
+#############################################
+##                ACCESSORS                ##
+#############################################
+
+@view
+func name{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}() -> (name: felt):
+    let (_name) = NAME.read()
+    return (name=_name)
+end
+
+@view
+func symbol{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}() -> (symbol: felt):
+    let (_symbol) = SYMBOL.read()
+    return (symbol=_symbol)
+end
+
+@view
+func totalSupply{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}() -> (totalSupply: Uint256):
+    let (_total_supply: Uint256) = TOTAL_SUPPLY.read()
+    return (totalSupply=_total_supply)
+end
+
+@view
+func ownerOf{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(token_id: felt) -> (res: felt):
+    let (res) = OWNER.read(token_id=token_id)
+    return (res)
+end
+
+
+@view
+func balanceOf{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(account: felt) -> (balance: Uint256):
+    let (_balance: Uint256) = BALANCES.read(owner=account)
+    return (balance=_balance)
+end
+
+@view
+func allowance{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    owner: felt,
+    spender: felt
+) -> (remaining: Uint256):
+    let (REMAINING: Uint256) = ALLOWANCE.read(owner=owner, spender=spender)
+    return (remaining=REMAINING)
+end
+
+@view
+func getApproved{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    token_id: felt
+) -> (res: felt):
+    let (res) = TOKEN_APPROVALS.read(token_id=token_id)
+    return (res)
 end

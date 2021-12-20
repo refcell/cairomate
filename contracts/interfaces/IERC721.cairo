@@ -15,7 +15,7 @@ namespace IERC721:
     func symbol() -> (symbol: felt):
     end
 
-    func decimals() -> (decimals: felt):
+    func baseURI() -> (base_uri: felt):
     end
 
     func totalSupply() -> (totalSupply: Uint256):
