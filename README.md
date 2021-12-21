@@ -7,18 +7,22 @@
 
 ```ml
 contracts
+├─ defi
+   ├─ StakingRewards — "Flexible, stripped staking rewards measured by blocks"
 ├─ interfaces
    ├─ IAccount — "Account Interface"
    ├─ IERC20 — "ERC20 Contract Interface"
    ├─ IERC721 — "ERC721 Contract Interface"
+├─ tokens
+   ├─ ERC20 — "Modern and gas efficient ERC20 + EIP-2612 implementation"
+   ├─ ERC721 — "Modern and gas efficient ERC721 + EIP-2612 implementation"
 ├─ utils
    ├─ Account — "Stripped account"
    ├─ Ownable — "Minimal, ownable contract instance"
    ├─ Context — "Port of OZ's Solidity Context Abstraction"
-├─ tokens
-   ├─ ERC20 — "Modern and gas efficient ERC20 + EIP-2612 implementation"
-   ├─ ERC721 — "Modern and gas efficient ERC721 + EIP-2612 implementation"
+   ├─ Pausible — "Pausible Solidity Functionality"
 tests
+├─ test_StakingRewards — "Flexible, stripped staking rewards measured by blocks"
 ├─ test_ERC20 - "Test ERC20 contract"
 ├─ test_ERC721 - "Test ERC721 contract"
 ├─ test_Ownable - "Test Ownable contract"

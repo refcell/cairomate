@@ -1,5 +1,16 @@
 [
     {
+        "inputs": [
+            {
+                "name": "_public_key",
+                "type": "felt"
+            }
+        ],
+        "name": "constructor",
+        "outputs": [],
+        "type": "constructor"
+    },
+    {
         "inputs": [],
         "name": "assert_only_self",
         "outputs": [],
@@ -40,17 +51,6 @@
         "name": "set_public_key",
         "outputs": [],
         "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_public_key",
-                "type": "felt"
-            }
-        ],
-        "name": "constructor",
-        "outputs": [],
-        "type": "constructor"
     },
     {
         "inputs": [

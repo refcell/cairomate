@@ -120,6 +120,18 @@
     },
     {
         "inputs": [],
+        "name": "baseURI",
+        "outputs": [
+            {
+                "name": "base_uri",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "totalSupply",
         "outputs": [
             {
