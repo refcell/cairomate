@@ -7,7 +7,7 @@ from starkware.cairo.common.hash import hash2
 from starkware.cairo.common.math import assert_le, assert_nn_le, unsigned_div_rem, assert_not_zero
 from starkware.starknet.common.syscalls import storage_read, storage_write
 from starkware.cairo.common.uint256 import (
-    Uint256, uint256_add, uint256_sub, uint256_le, uint256_lt, uint256_check
+    Uint256, uint256_add, uint256_sub, uint256_le, uint256_lt, uint256_check, uint256_signed_nn_le, uint256_mul
 )
 
 ## Local Imports ##
@@ -32,31 +32,31 @@ func REWARD_TOKEN() -> (token: felt):
 end
 
 @storage_var
-func REWARD_RATE() -> (rate: felt):
+func REWARD_RATE() -> (rate: Uint256):
 end
 
 @storage_var
-func LAST_UPDATE_TIME() -> (time: felt):
+func LAST_UPDATE_TIME() -> (time: Uint256):
 end
 
 @storage_var
-func REWARD_PER_TOKEN_STORED() -> (reward: felt):
+func REWARD_PER_TOKEN_STORED() -> (reward: Uint256):
 end
 
 @storage_var
-func USER_REWARD_PER_TOKEN_PAID(user: felt) -> (reward: felt):
+func USER_REWARD_PER_TOKEN_PAID(user: felt) -> (reward: Uint256):
 end
 
 @storage_var
-func REWARDS(user: felt) -> (reward: felt):
+func REWARDS(user: felt) -> (reward: Uint256):
 end
 
 @storage_var
-func TOTAL_SUPPLY() -> (total_supply: felt):
+func TOTAL_SUPPLY() -> (total_supply: Uint256):
 end
 
 @storage_var
-func BALANCES(user: felt) -> (balance: felt):
+func BALANCES(user: felt) -> (balance: Uint256):
 end
 
 #############################################
@@ -74,6 +74,7 @@ func constructor{
 ):
     STAKING_TOKEN.write(staking_token)
     REWARD_TOKEN.write(reward_token)
+    return ()
 end
 
 #############################################
@@ -105,7 +106,7 @@ func rewardRate{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}() -> (rate: felt):
+}() -> (rate: Uint256):
     let (_rate) = REWARD_RATE.read()
     return (rate=_rate)
 end
@@ -115,7 +116,7 @@ func lastUpdateTime{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}() -> (time: felt):
+}() -> (time: Uint256):
     let (_time) = LAST_UPDATE_TIME.read()
     return (time=_time)
 end
@@ -125,7 +126,7 @@ func rewardPerTokenStored{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}() -> (reward: felt):
+}() -> (reward: Uint256):
     let (_reward) = REWARD_PER_TOKEN_STORED.read()
     return (reward=_reward)
 end
@@ -137,7 +138,7 @@ func userRewardPerTokenPaid{
     range_check_ptr
 }(
     user: felt
-) -> (reward: felt):
+) -> (reward: Uint256):
     let (_reward) = USER_REWARD_PER_TOKEN_PAID.read(user)
     return (reward=_reward)
 end
@@ -149,7 +150,7 @@ func rewards{
     range_check_ptr
 }(
     user: felt
-) -> (reward: felt):
+) -> (reward: Uint256):
     let (_reward) = REWARDS.read(user)
     return (reward=_reward)
 end
@@ -161,10 +162,12 @@ func rewardPerToken{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}() -> (reward: felt):
-    let (_total_supply) = TOTAL_SUPPLY.read()
-    if _total_supply == 0:
-        return (reward=0)
+}() -> (reward: Uint256):
+    alloc_locals
+    let (local _total_supply) = TOTAL_SUPPLY.read()
+    let (is_zero) = uint256_signed_nn_le(_total_supply, Uint256(0, 0))
+    if is_zero == 1:
+        return (reward=Uint256(0, 0))
     end
 
     let (_reward) = rewardPerTokenStored()
@@ -182,7 +185,7 @@ func earned{
     range_check_ptr
 }(
     user: felt
-) -> (amoun: felt):
+) -> (amoun: Uint256):
     alloc_locals
     let (local balance) = BALANCES.read(user)
     let (local user_reward) = USER_REWARD_PER_TOKEN_PAID.read(user)
@@ -195,7 +198,9 @@ func earned{
     #   / 1e18
     # ) + rewards[account]
 
-    let (amount) = (balance * (reward_per_token - user_reward)) + accumulated_rewards
+    let (local rel_reward: Uint256) = uint256_sub(reward_per_token, user_reward)
+    let (local rel_balance: Uint256, _: Uint256) = uint256_mul(balance, rel_reward)
+    let (local amount: Uint256, _: Uint256) = uint256_add(rel_balance, accumulated_rewards)
     return (amount)
 end
 
@@ -212,12 +217,15 @@ func updateReward{
 }(
     address: felt
 ):
-    let (_reward_per_token_stored) = rewardPerToken()
-    let (_last_update_time) = 0 # TODO: how to get `block.timestamp`?
+    alloc_locals
+    let (local _reward_per_token_stored) = rewardPerToken()
+    let _last_update_time = 0 # TODO: how to get `block.timestamp`?
 
     let (_earned) = earned(address)
     REWARDS.write(address, _earned)
     USER_REWARD_PER_TOKEN_PAID.write(address, _reward_per_token_stored)
+
+    return ()
 end
 
 @external
@@ -226,32 +234,35 @@ func stake{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }(
-    amount: felt
+    amount: Uint256
 ):
+    alloc_locals
     ## !! CALL updateReward() !! ##
-    let (caller) = get_caller_address()
+    let (local caller) = get_caller_address()
     updateReward(caller)
 
     ## Update total supply ##
-    let (_total_supply) = TOTAL_SUPPLY.read()
-    let (new_supply) = _total_supply + amount
-    assert_nn_le(_total_supply, new_supply)
-    TOTAL_SUPPLY.write(_total_supply + amount)
+    let (intial_supply) = TOTAL_SUPPLY.read()
+    let (new_supply, _: Uint256) = uint256_add(intial_supply, amount)
+    let (positive_update) = uint256_le(intial_supply, new_supply)
+    assert_not_zero(positive_update)
+    TOTAL_SUPPLY.write(new_supply)
 
     ## Update balances ##
-    let (_balances) = BALANCES.read(caller)
-    let (new_balance) = _balances + amount
-    assert_nn_le(_balances, new_balance)
+    let (initial_balance) = BALANCES.read(caller)
+    let (new_balance, _: Uint256) = uint256_add(initial_balance, amount)
+    let (positive_update) = uint256_le(initial_balance, new_balance)
+    assert_not_zero(positive_update)
     BALANCES.write(caller, new_balance)
 
     ## Transfer from caller to contract ##
-    let (staking_token) = STAKING_TOKEN.read()
+    let (local staking_token) = STAKING_TOKEN.read()
     let (contract_address) = get_contract_address()
     IERC20.transferFrom(
         contract_address=staking_token,
-        caller, # sender
-        contract_address, # recipient
-        amount # amount
+        sender=caller,
+        recipient=contract_address,
+        amount=amount
     )
 
     return ()
@@ -263,45 +274,63 @@ func withdraw{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }(
-    amount: felt
+    amount: Uint256
 ):
+    alloc_locals
     ## !! CALL updateReward() !! ##
-    let (caller) = get_caller_address()
+    let (local caller) = get_caller_address()
     updateReward(caller)
 
     ## Update total supply ##
-    let (_total_supply) = TOTAL_SUPPLY.read()
-    let (new_supply) = _total_supply + amount
-    assert_nn_le(_total_supply, new_supply)
-    TOTAL_SUPPLY.write(_total_supply + amount)
+    let (intial_supply) = TOTAL_SUPPLY.read()
+    let (new_supply, _: Uint256) = uint256_add(intial_supply, amount)
+    let (negative_update) = uint256_le(new_supply, intial_supply)
+    assert_not_zero(negative_update)
+    TOTAL_SUPPLY.write(new_supply)
 
     ## Update balances ##
-    let (_balances) = BALANCES.read(caller)
-    let (new_balance) = _balances + amount
-    assert_nn_le(_balances, new_balance)
+    let (initial_balance) = BALANCES.read(caller)
+    let (new_balance, _: Uint256) = uint256_add(initial_balance, amount)
+    let (negative_update) = uint256_le(new_balance, initial_balance)
+    assert_not_zero(negative_update)
     BALANCES.write(caller, new_balance)
 
     ## Transfer from caller to contract ##
-    let (staking_token) = STAKING_TOKEN.read()
+    let (local staking_token) = STAKING_TOKEN.read()
     let (contract_address) = get_contract_address()
     IERC20.transferFrom(
         contract_address=staking_token,
-        caller, # sender
-        contract_address, # recipient
-        amount # amount
+        sender=contract_address,
+        recipient=caller,
+        amount=amount
     )
 
     return ()
 end
 
-function withdraw(uint _amount) external updateReward(msg.sender) {
-    _totalSupply -= _amount;
-    _balances[msg.sender] -= _amount;
-    stakingToken.transfer(msg.sender, _amount);
-}
+@external
+func getReward{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}():
+    alloc_locals
+    ## !! CALL updateReward() !! ##
+    let (local caller) = get_caller_address()
+    updateReward(caller)
 
-function getReward() external updateReward(msg.sender) {
-    uint reward = rewards[msg.sender];
-    rewards[msg.sender] = 0;
-    rewardsToken.transfer(msg.sender, reward);
-}
+    ## Send the reward to the caller ##
+    let (local reward) = REWARDS.read(caller)
+    REWARDS.write(caller, Uint256(0, 0))
+
+    ## Transfer from caller to contract ##
+    let (local reward_token) = REWARD_TOKEN.read()
+    let (contract_address) = get_contract_address()
+    IERC20.transfer(
+        contract_address=reward_token,
+        recipient=caller,
+        amount=reward
+    )
+
+    return ()
+end

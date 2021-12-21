@@ -1776,7 +1776,7 @@
                     "hints": [],
                     "inst": {
                         "end_col": 23,
-                        "end_line": 14,
+                        "end_line": 27,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
@@ -1790,12 +1790,12 @@
                                 "parent_location": [
                                     {
                                         "end_col": 23,
-                                        "end_line": 20,
+                                        "end_line": 33,
                                         "input_file": {
                                             "filename": "contracts/utils/Ownable.cairo"
                                         },
                                         "start_col": 5,
-                                        "start_line": 20
+                                        "start_line": 33
                                     },
                                     "While trying to retrieve the implicit argument 'syscall_ptr' in:"
                                 ],
@@ -1805,7 +1805,7 @@
                             "While expanding the reference 'syscall_ptr' in:"
                         ],
                         "start_col": 5,
-                        "start_line": 14
+                        "start_line": 27
                     }
                 },
                 "47": {
@@ -1829,7 +1829,7 @@
                     "hints": [],
                     "inst": {
                         "end_col": 31,
-                        "end_line": 15,
+                        "end_line": 28,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
@@ -1843,12 +1843,12 @@
                                 "parent_location": [
                                     {
                                         "end_col": 23,
-                                        "end_line": 20,
+                                        "end_line": 33,
                                         "input_file": {
                                             "filename": "contracts/utils/Ownable.cairo"
                                         },
                                         "start_col": 5,
-                                        "start_line": 20
+                                        "start_line": 33
                                     },
                                     "While trying to retrieve the implicit argument 'pedersen_ptr' in:"
                                 ],
@@ -1858,7 +1858,7 @@
                             "While expanding the reference 'pedersen_ptr' in:"
                         ],
                         "start_col": 5,
-                        "start_line": 15
+                        "start_line": 28
                     }
                 },
                 "48": {
@@ -1882,7 +1882,7 @@
                     "hints": [],
                     "inst": {
                         "end_col": 20,
-                        "end_line": 16,
+                        "end_line": 29,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
@@ -1896,12 +1896,12 @@
                                 "parent_location": [
                                     {
                                         "end_col": 23,
-                                        "end_line": 20,
+                                        "end_line": 33,
                                         "input_file": {
                                             "filename": "contracts/utils/Ownable.cairo"
                                         },
                                         "start_col": 5,
-                                        "start_line": 20
+                                        "start_line": 33
                                     },
                                     "While trying to retrieve the implicit argument 'range_check_ptr' in:"
                                 ],
@@ -1911,7 +1911,7 @@
                             "While expanding the reference 'range_check_ptr' in:"
                         ],
                         "start_col": 5,
-                        "start_line": 16
+                        "start_line": 29
                     }
                 },
                 "49": {
@@ -1935,24 +1935,24 @@
                     "hints": [],
                     "inst": {
                         "end_col": 16,
-                        "end_line": 18,
+                        "end_line": 31,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
                         "parent_location": [
                             {
                                 "end_col": 22,
-                                "end_line": 20,
+                                "end_line": 33,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 17,
-                                "start_line": 20
+                                "start_line": 33
                             },
                             "While expanding the reference 'owner' in:"
                         ],
                         "start_col": 5,
-                        "start_line": 18
+                        "start_line": 31
                     }
                 },
                 "50": {
@@ -1976,12 +1976,12 @@
                     "hints": [],
                     "inst": {
                         "end_col": 23,
-                        "end_line": 20,
+                        "end_line": 33,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
                         "start_col": 5,
-                        "start_line": 20
+                        "start_line": 33
                     }
                 },
                 "52": {
@@ -2005,12 +2005,12 @@
                     "hints": [],
                     "inst": {
                         "end_col": 14,
-                        "end_line": 21,
+                        "end_line": 34,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
                         "start_col": 5,
-                        "start_line": 21
+                        "start_line": 34
                     }
                 },
                 "53": {
@@ -2044,7 +2044,7 @@
                         "parent_location": [
                             {
                                 "end_col": 16,
-                                "end_line": 18,
+                                "end_line": 31,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -2058,7 +2058,7 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 17,
-                                                "end_line": 13,
+                                                "end_line": 26,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
@@ -2072,12 +2072,12 @@
                                                         "parent_location": [
                                                             {
                                                                 "end_col": 17,
-                                                                "end_line": 13,
+                                                                "end_line": 26,
                                                                 "input_file": {
                                                                     "filename": "contracts/utils/Ownable.cairo"
                                                                 },
                                                                 "start_col": 6,
-                                                                "start_line": 13
+                                                                "start_line": 26
                                                             },
                                                             "While handling calldata of"
                                                         ],
@@ -2087,7 +2087,7 @@
                                                     "While expanding the reference '__calldata_actual_size' in:"
                                                 ],
                                                 "start_col": 6,
-                                                "start_line": 13
+                                                "start_line": 26
                                             },
                                             "While handling calldata of"
                                         ],
@@ -2097,7 +2097,7 @@
                                     "While expanding the reference '__calldata_ptr' in:"
                                 ],
                                 "start_col": 5,
-                                "start_line": 18
+                                "start_line": 31
                             },
                             "While handling calldata argument 'owner'"
                         ],
@@ -2137,12 +2137,12 @@
                         "parent_location": [
                             {
                                 "end_col": 17,
-                                "end_line": 13,
+                                "end_line": 26,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 13
+                                "start_line": 26
                             },
                             "While handling calldata of"
                         ],
@@ -2182,7 +2182,7 @@
                         "parent_location": [
                             {
                                 "end_col": 23,
-                                "end_line": 14,
+                                "end_line": 27,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -2196,12 +2196,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 17,
-                                                "end_line": 13,
+                                                "end_line": 26,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 13
+                                                "start_line": 26
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -2211,7 +2211,7 @@
                                     "While expanding the reference 'syscall_ptr' in:"
                                 ],
                                 "start_col": 5,
-                                "start_line": 14
+                                "start_line": 27
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -2251,7 +2251,7 @@
                         "parent_location": [
                             {
                                 "end_col": 31,
-                                "end_line": 15,
+                                "end_line": 28,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -2265,12 +2265,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 17,
-                                                "end_line": 13,
+                                                "end_line": 26,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 13
+                                                "start_line": 26
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -2280,7 +2280,7 @@
                                     "While expanding the reference 'pedersen_ptr' in:"
                                 ],
                                 "start_col": 5,
-                                "start_line": 15
+                                "start_line": 28
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -2320,7 +2320,7 @@
                         "parent_location": [
                             {
                                 "end_col": 20,
-                                "end_line": 16,
+                                "end_line": 29,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -2334,12 +2334,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 17,
-                                                "end_line": 13,
+                                                "end_line": 26,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 13
+                                                "start_line": 26
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -2349,7 +2349,7 @@
                                     "While expanding the reference 'range_check_ptr' in:"
                                 ],
                                 "start_col": 5,
-                                "start_line": 16
+                                "start_line": 29
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -2389,7 +2389,7 @@
                         "parent_location": [
                             {
                                 "end_col": 16,
-                                "end_line": 18,
+                                "end_line": 31,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -2403,12 +2403,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 17,
-                                                "end_line": 13,
+                                                "end_line": 26,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 13
+                                                "start_line": 26
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -2418,7 +2418,7 @@
                                     "While expanding the reference '__calldata_arg_owner' in:"
                                 ],
                                 "start_col": 5,
-                                "start_line": 18
+                                "start_line": 31
                             },
                             "While handling calldata argument 'owner'"
                         ],
@@ -2451,12 +2451,12 @@
                     "hints": [],
                     "inst": {
                         "end_col": 17,
-                        "end_line": 13,
+                        "end_line": 26,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
                         "start_col": 6,
-                        "start_line": 13
+                        "start_line": 26
                     }
                 },
                 "62": {
@@ -2493,12 +2493,12 @@
                                 "parent_location": [
                                     {
                                         "end_col": 17,
-                                        "end_line": 13,
+                                        "end_line": 26,
                                         "input_file": {
                                             "filename": "contracts/utils/Ownable.cairo"
                                         },
                                         "start_col": 6,
-                                        "start_line": 13
+                                        "start_line": 26
                                     },
                                     "While constructing the external wrapper for:"
                                 ],
@@ -2517,12 +2517,12 @@
                         "parent_location": [
                             {
                                 "end_col": 17,
-                                "end_line": 13,
+                                "end_line": 26,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 13
+                                "start_line": 26
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -2565,7 +2565,7 @@
                         "parent_location": [
                             {
                                 "end_col": 17,
-                                "end_line": 13,
+                                "end_line": 26,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -2579,12 +2579,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 17,
-                                                "end_line": 13,
+                                                "end_line": 26,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 13
+                                                "start_line": 26
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -2594,7 +2594,7 @@
                                     "While expanding the reference 'syscall_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 13
+                                "start_line": 26
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -2637,7 +2637,7 @@
                         "parent_location": [
                             {
                                 "end_col": 17,
-                                "end_line": 13,
+                                "end_line": 26,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -2651,12 +2651,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 17,
-                                                "end_line": 13,
+                                                "end_line": 26,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 13
+                                                "start_line": 26
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -2666,7 +2666,7 @@
                                     "While expanding the reference 'pedersen_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 13
+                                "start_line": 26
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -2709,7 +2709,7 @@
                         "parent_location": [
                             {
                                 "end_col": 17,
-                                "end_line": 13,
+                                "end_line": 26,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -2723,12 +2723,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 17,
-                                                "end_line": 13,
+                                                "end_line": 26,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 13
+                                                "start_line": 26
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -2738,7 +2738,7 @@
                                     "While expanding the reference 'range_check_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 13
+                                "start_line": 26
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -2781,7 +2781,7 @@
                         "parent_location": [
                             {
                                 "end_col": 17,
-                                "end_line": 13,
+                                "end_line": 26,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -2795,12 +2795,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 17,
-                                                "end_line": 13,
+                                                "end_line": 26,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 13
+                                                "start_line": 26
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -2810,7 +2810,7 @@
                                     "While expanding the reference 'retdata_size' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 13
+                                "start_line": 26
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -2853,7 +2853,7 @@
                         "parent_location": [
                             {
                                 "end_col": 17,
-                                "end_line": 13,
+                                "end_line": 26,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -2867,12 +2867,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 17,
-                                                "end_line": 13,
+                                                "end_line": 26,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 13
+                                                "start_line": 26
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -2882,7 +2882,7 @@
                                     "While expanding the reference 'retdata' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 13
+                                "start_line": 26
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -2925,12 +2925,12 @@
                         "parent_location": [
                             {
                                 "end_col": 17,
-                                "end_line": 13,
+                                "end_line": 26,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 13
+                                "start_line": 26
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -2958,7 +2958,7 @@
                     "hints": [],
                     "inst": {
                         "end_col": 23,
-                        "end_line": 26,
+                        "end_line": 43,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
@@ -2972,12 +2972,12 @@
                                 "parent_location": [
                                     {
                                         "end_col": 31,
-                                        "end_line": 30,
+                                        "end_line": 47,
                                         "input_file": {
                                             "filename": "contracts/utils/Ownable.cairo"
                                         },
                                         "start_col": 19,
-                                        "start_line": 30
+                                        "start_line": 47
                                     },
                                     "While trying to retrieve the implicit argument 'syscall_ptr' in:"
                                 ],
@@ -2987,7 +2987,7 @@
                             "While expanding the reference 'syscall_ptr' in:"
                         ],
                         "start_col": 5,
-                        "start_line": 26
+                        "start_line": 43
                     }
                 },
                 "72": {
@@ -3010,7 +3010,7 @@
                     "hints": [],
                     "inst": {
                         "end_col": 31,
-                        "end_line": 27,
+                        "end_line": 44,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
@@ -3024,12 +3024,12 @@
                                 "parent_location": [
                                     {
                                         "end_col": 31,
-                                        "end_line": 30,
+                                        "end_line": 47,
                                         "input_file": {
                                             "filename": "contracts/utils/Ownable.cairo"
                                         },
                                         "start_col": 19,
-                                        "start_line": 30
+                                        "start_line": 47
                                     },
                                     "While trying to retrieve the implicit argument 'pedersen_ptr' in:"
                                 ],
@@ -3039,7 +3039,7 @@
                             "While expanding the reference 'pedersen_ptr' in:"
                         ],
                         "start_col": 5,
-                        "start_line": 27
+                        "start_line": 44
                     }
                 },
                 "73": {
@@ -3062,7 +3062,7 @@
                     "hints": [],
                     "inst": {
                         "end_col": 20,
-                        "end_line": 28,
+                        "end_line": 45,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
@@ -3076,12 +3076,12 @@
                                 "parent_location": [
                                     {
                                         "end_col": 31,
-                                        "end_line": 30,
+                                        "end_line": 47,
                                         "input_file": {
                                             "filename": "contracts/utils/Ownable.cairo"
                                         },
                                         "start_col": 19,
-                                        "start_line": 30
+                                        "start_line": 47
                                     },
                                     "While trying to retrieve the implicit argument 'range_check_ptr' in:"
                                 ],
@@ -3091,7 +3091,7 @@
                             "While expanding the reference 'range_check_ptr' in:"
                         ],
                         "start_col": 5,
-                        "start_line": 28
+                        "start_line": 45
                     }
                 },
                 "74": {
@@ -3114,12 +3114,12 @@
                     "hints": [],
                     "inst": {
                         "end_col": 31,
-                        "end_line": 30,
+                        "end_line": 47,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
                         "start_col": 19,
-                        "start_line": 30
+                        "start_line": 47
                     }
                 },
                 "76": {
@@ -3143,12 +3143,12 @@
                     "hints": [],
                     "inst": {
                         "end_col": 25,
-                        "end_line": 31,
+                        "end_line": 48,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
                         "start_col": 5,
-                        "start_line": 31
+                        "start_line": 48
                     }
                 },
                 "77": {
@@ -3179,12 +3179,12 @@
                                 "parent_location": [
                                     {
                                         "end_col": 15,
-                                        "end_line": 25,
+                                        "end_line": 42,
                                         "input_file": {
                                             "filename": "contracts/utils/Ownable.cairo"
                                         },
                                         "start_col": 6,
-                                        "start_line": 25
+                                        "start_line": 42
                                     },
                                     "While handling return value of"
                                 ],
@@ -3203,12 +3203,12 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While handling return value of"
                         ],
@@ -3245,12 +3245,12 @@
                         "parent_location": [
                             {
                                 "end_col": 20,
-                                "end_line": 29,
+                                "end_line": 46,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 9,
-                                "start_line": 29
+                                "start_line": 46
                             },
                             "While handling return value 'owner'"
                         ],
@@ -3287,7 +3287,7 @@
                         "parent_location": [
                             {
                                 "end_col": 20,
-                                "end_line": 29,
+                                "end_line": 46,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -3301,12 +3301,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 15,
-                                                "end_line": 25,
+                                                "end_line": 42,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 25
+                                                "start_line": 42
                                             },
                                             "While handling return value of"
                                         ],
@@ -3316,7 +3316,7 @@
                                     "While expanding the reference '__return_value_ptr' in:"
                                 ],
                                 "start_col": 9,
-                                "start_line": 29
+                                "start_line": 46
                             },
                             "While handling return value 'owner'"
                         ],
@@ -3354,7 +3354,7 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -3368,12 +3368,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 15,
-                                                "end_line": 25,
+                                                "end_line": 42,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 25
+                                                "start_line": 42
                                             },
                                             "While handling return value of"
                                         ],
@@ -3383,7 +3383,7 @@
                                     "While expanding the reference 'range_check_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While handling return value of"
                         ],
@@ -3421,12 +3421,12 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While handling return value of"
                         ],
@@ -3464,7 +3464,7 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -3478,12 +3478,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 15,
-                                                "end_line": 25,
+                                                "end_line": 42,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 25
+                                                "start_line": 42
                                             },
                                             "While handling return value of"
                                         ],
@@ -3493,7 +3493,7 @@
                                     "While expanding the reference '__return_value_ptr_start' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While handling return value of"
                         ],
@@ -3531,12 +3531,12 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While handling return value of"
                         ],
@@ -3574,12 +3574,12 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While handling calldata of"
                         ],
@@ -3617,7 +3617,7 @@
                         "parent_location": [
                             {
                                 "end_col": 23,
-                                "end_line": 26,
+                                "end_line": 43,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -3631,12 +3631,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 15,
-                                                "end_line": 25,
+                                                "end_line": 42,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 25
+                                                "start_line": 42
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -3646,7 +3646,7 @@
                                     "While expanding the reference 'syscall_ptr' in:"
                                 ],
                                 "start_col": 5,
-                                "start_line": 26
+                                "start_line": 43
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -3684,7 +3684,7 @@
                         "parent_location": [
                             {
                                 "end_col": 31,
-                                "end_line": 27,
+                                "end_line": 44,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -3698,12 +3698,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 15,
-                                                "end_line": 25,
+                                                "end_line": 42,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 25
+                                                "start_line": 42
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -3713,7 +3713,7 @@
                                     "While expanding the reference 'pedersen_ptr' in:"
                                 ],
                                 "start_col": 5,
-                                "start_line": 27
+                                "start_line": 44
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -3751,7 +3751,7 @@
                         "parent_location": [
                             {
                                 "end_col": 20,
-                                "end_line": 28,
+                                "end_line": 45,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -3765,12 +3765,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 15,
-                                                "end_line": 25,
+                                                "end_line": 42,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 25
+                                                "start_line": 42
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -3780,7 +3780,7 @@
                                     "While expanding the reference 'range_check_ptr' in:"
                                 ],
                                 "start_col": 5,
-                                "start_line": 28
+                                "start_line": 45
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -3811,12 +3811,12 @@
                     "hints": [],
                     "inst": {
                         "end_col": 15,
-                        "end_line": 25,
+                        "end_line": 42,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
                         "start_col": 6,
-                        "start_line": 25
+                        "start_line": 42
                     }
                 },
                 "92": {
@@ -3850,7 +3850,7 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -3864,12 +3864,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 15,
-                                                "end_line": 25,
+                                                "end_line": 42,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 25
+                                                "start_line": 42
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -3879,7 +3879,7 @@
                                     "While expanding the reference 'range_check_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -3918,12 +3918,12 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -3964,7 +3964,7 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -3978,12 +3978,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 15,
-                                                "end_line": 25,
+                                                "end_line": 42,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 25
+                                                "start_line": 42
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -3993,7 +3993,7 @@
                                     "While expanding the reference 'syscall_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -4034,7 +4034,7 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -4048,12 +4048,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 15,
-                                                "end_line": 25,
+                                                "end_line": 42,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 25
+                                                "start_line": 42
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -4063,7 +4063,7 @@
                                     "While expanding the reference 'pedersen_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -4104,7 +4104,7 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -4118,12 +4118,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 15,
-                                                "end_line": 25,
+                                                "end_line": 42,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 25
+                                                "start_line": 42
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -4133,7 +4133,7 @@
                                     "While expanding the reference 'range_check_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -4174,7 +4174,7 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -4188,12 +4188,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 15,
-                                                "end_line": 25,
+                                                "end_line": 42,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 25
+                                                "start_line": 42
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -4203,7 +4203,7 @@
                                     "While expanding the reference 'retdata_size' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -4244,7 +4244,7 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -4258,12 +4258,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 15,
-                                                "end_line": 25,
+                                                "end_line": 42,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 25
+                                                "start_line": 42
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -4273,7 +4273,7 @@
                                     "While expanding the reference 'retdata' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -4314,12 +4314,12 @@
                         "parent_location": [
                             {
                                 "end_col": 15,
-                                "end_line": 25,
+                                "end_line": 42,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 25
+                                "start_line": 42
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -4348,7 +4348,7 @@
                     "hints": [],
                     "inst": {
                         "end_col": 23,
-                        "end_line": 36,
+                        "end_line": 53,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
@@ -4362,12 +4362,12 @@
                                 "parent_location": [
                                     {
                                         "end_col": 27,
-                                        "end_line": 40,
+                                        "end_line": 57,
                                         "input_file": {
                                             "filename": "contracts/utils/Ownable.cairo"
                                         },
                                         "start_col": 5,
-                                        "start_line": 40
+                                        "start_line": 57
                                     },
                                     "While trying to retrieve the implicit argument 'syscall_ptr' in:"
                                 ],
@@ -4377,7 +4377,7 @@
                             "While expanding the reference 'syscall_ptr' in:"
                         ],
                         "start_col": 5,
-                        "start_line": 36
+                        "start_line": 53
                     }
                 },
                 "102": {
@@ -4401,7 +4401,7 @@
                     "hints": [],
                     "inst": {
                         "end_col": 31,
-                        "end_line": 37,
+                        "end_line": 54,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
@@ -4415,12 +4415,12 @@
                                 "parent_location": [
                                     {
                                         "end_col": 27,
-                                        "end_line": 40,
+                                        "end_line": 57,
                                         "input_file": {
                                             "filename": "contracts/utils/Ownable.cairo"
                                         },
                                         "start_col": 5,
-                                        "start_line": 40
+                                        "start_line": 57
                                     },
                                     "While trying to retrieve the implicit argument 'pedersen_ptr' in:"
                                 ],
@@ -4430,7 +4430,7 @@
                             "While expanding the reference 'pedersen_ptr' in:"
                         ],
                         "start_col": 5,
-                        "start_line": 37
+                        "start_line": 54
                     }
                 },
                 "103": {
@@ -4454,7 +4454,7 @@
                     "hints": [],
                     "inst": {
                         "end_col": 20,
-                        "end_line": 38,
+                        "end_line": 55,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
@@ -4468,12 +4468,12 @@
                                 "parent_location": [
                                     {
                                         "end_col": 27,
-                                        "end_line": 40,
+                                        "end_line": 57,
                                         "input_file": {
                                             "filename": "contracts/utils/Ownable.cairo"
                                         },
                                         "start_col": 5,
-                                        "start_line": 40
+                                        "start_line": 57
                                     },
                                     "While trying to retrieve the implicit argument 'range_check_ptr' in:"
                                 ],
@@ -4483,7 +4483,7 @@
                             "While expanding the reference 'range_check_ptr' in:"
                         ],
                         "start_col": 5,
-                        "start_line": 38
+                        "start_line": 55
                     }
                 },
                 "104": {
@@ -4507,24 +4507,24 @@
                     "hints": [],
                     "inst": {
                         "end_col": 18,
-                        "end_line": 39,
+                        "end_line": 56,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
                         "parent_location": [
                             {
                                 "end_col": 26,
-                                "end_line": 40,
+                                "end_line": 57,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 17,
-                                "start_line": 40
+                                "start_line": 57
                             },
                             "While expanding the reference 'new_owner' in:"
                         ],
                         "start_col": 3,
-                        "start_line": 39
+                        "start_line": 56
                     }
                 },
                 "105": {
@@ -4548,12 +4548,12 @@
                     "hints": [],
                     "inst": {
                         "end_col": 27,
-                        "end_line": 40,
+                        "end_line": 57,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
                         "start_col": 5,
-                        "start_line": 40
+                        "start_line": 57
                     }
                 },
                 "107": {
@@ -4577,24 +4577,24 @@
                     "hints": [],
                     "inst": {
                         "end_col": 18,
-                        "end_line": 39,
+                        "end_line": 56,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
                         "parent_location": [
                             {
                                 "end_col": 32,
-                                "end_line": 41,
+                                "end_line": 58,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 23,
-                                "start_line": 41
+                                "start_line": 58
                             },
                             "While expanding the reference 'new_owner' in:"
                         ],
                         "start_col": 3,
-                        "start_line": 39
+                        "start_line": 56
                     }
                 },
                 "108": {
@@ -4618,12 +4618,12 @@
                     "hints": [],
                     "inst": {
                         "end_col": 33,
-                        "end_line": 41,
+                        "end_line": 58,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
                         "start_col": 5,
-                        "start_line": 41
+                        "start_line": 58
                     }
                 },
                 "109": {
@@ -4654,12 +4654,12 @@
                                 "parent_location": [
                                     {
                                         "end_col": 24,
-                                        "end_line": 35,
+                                        "end_line": 52,
                                         "input_file": {
                                             "filename": "contracts/utils/Ownable.cairo"
                                         },
                                         "start_col": 6,
-                                        "start_line": 35
+                                        "start_line": 52
                                     },
                                     "While handling return value of"
                                 ],
@@ -4678,12 +4678,12 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While handling return value of"
                         ],
@@ -4720,12 +4720,12 @@
                         "parent_location": [
                             {
                                 "end_col": 39,
-                                "end_line": 39,
+                                "end_line": 56,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 24,
-                                "start_line": 39
+                                "start_line": 56
                             },
                             "While handling return value 'new_owner'"
                         ],
@@ -4762,7 +4762,7 @@
                         "parent_location": [
                             {
                                 "end_col": 39,
-                                "end_line": 39,
+                                "end_line": 56,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -4776,12 +4776,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While handling return value of"
                                         ],
@@ -4791,7 +4791,7 @@
                                     "While expanding the reference '__return_value_ptr' in:"
                                 ],
                                 "start_col": 24,
-                                "start_line": 39
+                                "start_line": 56
                             },
                             "While handling return value 'new_owner'"
                         ],
@@ -4829,7 +4829,7 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -4843,12 +4843,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While handling return value of"
                                         ],
@@ -4858,7 +4858,7 @@
                                     "While expanding the reference 'range_check_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While handling return value of"
                         ],
@@ -4896,12 +4896,12 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While handling return value of"
                         ],
@@ -4939,7 +4939,7 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -4953,12 +4953,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While handling return value of"
                                         ],
@@ -4968,7 +4968,7 @@
                                     "While expanding the reference '__return_value_ptr_start' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While handling return value of"
                         ],
@@ -5006,12 +5006,12 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While handling return value of"
                         ],
@@ -5050,7 +5050,7 @@
                         "parent_location": [
                             {
                                 "end_col": 18,
-                                "end_line": 39,
+                                "end_line": 56,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -5064,7 +5064,7 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
@@ -5078,12 +5078,12 @@
                                                         "parent_location": [
                                                             {
                                                                 "end_col": 24,
-                                                                "end_line": 35,
+                                                                "end_line": 52,
                                                                 "input_file": {
                                                                     "filename": "contracts/utils/Ownable.cairo"
                                                                 },
                                                                 "start_col": 6,
-                                                                "start_line": 35
+                                                                "start_line": 52
                                                             },
                                                             "While handling calldata of"
                                                         ],
@@ -5093,7 +5093,7 @@
                                                     "While expanding the reference '__calldata_actual_size' in:"
                                                 ],
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While handling calldata of"
                                         ],
@@ -5103,7 +5103,7 @@
                                     "While expanding the reference '__calldata_ptr' in:"
                                 ],
                                 "start_col": 3,
-                                "start_line": 39
+                                "start_line": 56
                             },
                             "While handling calldata argument 'new_owner'"
                         ],
@@ -5143,12 +5143,12 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While handling calldata of"
                         ],
@@ -5188,7 +5188,7 @@
                         "parent_location": [
                             {
                                 "end_col": 23,
-                                "end_line": 36,
+                                "end_line": 53,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -5202,12 +5202,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -5217,7 +5217,7 @@
                                     "While expanding the reference 'syscall_ptr' in:"
                                 ],
                                 "start_col": 5,
-                                "start_line": 36
+                                "start_line": 53
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -5257,7 +5257,7 @@
                         "parent_location": [
                             {
                                 "end_col": 31,
-                                "end_line": 37,
+                                "end_line": 54,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -5271,12 +5271,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -5286,7 +5286,7 @@
                                     "While expanding the reference 'pedersen_ptr' in:"
                                 ],
                                 "start_col": 5,
-                                "start_line": 37
+                                "start_line": 54
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -5326,7 +5326,7 @@
                         "parent_location": [
                             {
                                 "end_col": 20,
-                                "end_line": 38,
+                                "end_line": 55,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -5340,12 +5340,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -5355,7 +5355,7 @@
                                     "While expanding the reference 'range_check_ptr' in:"
                                 ],
                                 "start_col": 5,
-                                "start_line": 38
+                                "start_line": 55
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -5395,7 +5395,7 @@
                         "parent_location": [
                             {
                                 "end_col": 18,
-                                "end_line": 39,
+                                "end_line": 56,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -5409,12 +5409,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -5424,7 +5424,7 @@
                                     "While expanding the reference '__calldata_arg_new_owner' in:"
                                 ],
                                 "start_col": 3,
-                                "start_line": 39
+                                "start_line": 56
                             },
                             "While handling calldata argument 'new_owner'"
                         ],
@@ -5457,12 +5457,12 @@
                     "hints": [],
                     "inst": {
                         "end_col": 24,
-                        "end_line": 35,
+                        "end_line": 52,
                         "input_file": {
                             "filename": "contracts/utils/Ownable.cairo"
                         },
                         "start_col": 6,
-                        "start_line": 35
+                        "start_line": 52
                     }
                 },
                 "127": {
@@ -5498,7 +5498,7 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -5512,12 +5512,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -5527,7 +5527,7 @@
                                     "While expanding the reference 'range_check_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -5568,12 +5568,12 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -5616,7 +5616,7 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -5630,12 +5630,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -5645,7 +5645,7 @@
                                     "While expanding the reference 'syscall_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -5688,7 +5688,7 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -5702,12 +5702,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -5717,7 +5717,7 @@
                                     "While expanding the reference 'pedersen_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -5760,7 +5760,7 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -5774,12 +5774,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -5789,7 +5789,7 @@
                                     "While expanding the reference 'range_check_ptr' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -5832,7 +5832,7 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -5846,12 +5846,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -5861,7 +5861,7 @@
                                     "While expanding the reference 'retdata_size' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -5904,7 +5904,7 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
@@ -5918,12 +5918,12 @@
                                         "parent_location": [
                                             {
                                                 "end_col": 24,
-                                                "end_line": 35,
+                                                "end_line": 52,
                                                 "input_file": {
                                                     "filename": "contracts/utils/Ownable.cairo"
                                                 },
                                                 "start_col": 6,
-                                                "start_line": 35
+                                                "start_line": 52
                                             },
                                             "While constructing the external wrapper for:"
                                         ],
@@ -5933,7 +5933,7 @@
                                     "While expanding the reference 'retdata' in:"
                                 ],
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While constructing the external wrapper for:"
                         ],
@@ -5976,12 +5976,12 @@
                         "parent_location": [
                             {
                                 "end_col": 24,
-                                "end_line": 35,
+                                "end_line": 52,
                                 "input_file": {
                                     "filename": "contracts/utils/Ownable.cairo"
                                 },
                                 "start_col": 6,
-                                "start_line": 35
+                                "start_line": 52
                             },
                             "While constructing the external wrapper for:"
                         ],
