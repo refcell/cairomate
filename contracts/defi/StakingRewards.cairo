@@ -205,6 +205,46 @@ func earned{
 end
 
 #############################################
+##                MUTATORS                 ##
+#############################################
+
+@view
+func setRewardToken{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    reward_token: felt
+):
+    REWARD_TOKEN.write(reward_token)
+    return ()
+end
+
+@view
+func setStakingToken{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    staking_token: felt
+):
+    STAKING_TOKEN.write(staking_token)
+    return ()
+end
+
+@view
+func setRewardRate{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    rate: Uint256
+):
+    REWARD_RATE.write(rate)
+    return ()
+end
+
+#############################################
 ##              STAKING LOGIC              ##
 #############################################
 
