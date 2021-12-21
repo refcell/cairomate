@@ -36,3 +36,32 @@ async def test_constructor(ownable_factory):
     assert exp_staking_token.result.token == 1
     exp_reward_token = await staking_rewards.rewardToken().call()
     assert exp_reward_token.result.token == 2
+
+
+@pytest.mark.asyncio
+async def test_set_staking_token(ownable_factory):
+    _, staking_rewards, owner = ownable_factory
+    new_staking_token = 3
+    await signer.send_transaction(owner, staking_rewards.contract_address, 'setStakingToken', [new_staking_token])
+    executed_info = await staking_rewards.stakingToken().call()
+    assert executed_info.result.token == new_staking_token
+
+
+@pytest.mark.asyncio
+async def test_set_reward_token(ownable_factory):
+    _, staking_rewards, owner = ownable_factory
+    new_reward_token = 3
+    await signer.send_transaction(owner, staking_rewards.contract_address, 'setRewardToken', [new_reward_token])
+    executed_info = await staking_rewards.rewardToken().call()
+    assert executed_info.result.token == new_reward_token
+
+
+@pytest.mark.asyncio
+async def test_set_reward_rate(ownable_factory):
+    _, staking_rewards, owner = ownable_factory
+    initial_rate = await staking_rewards.rewardToken().call()
+    assert initial_rate.result.token == 0
+    new_rate = 3
+    await signer.send_transaction(owner, staking_rewards.contract_address, 'setRewardRate', [new_rate])
+    updated_rate = await staking_rewards.rewardToken().call()
+    assert updated_rate.result.token == new_rate
