@@ -60,8 +60,8 @@ async def test_set_reward_token(ownable_factory):
 async def test_set_reward_rate(ownable_factory):
     _, staking_rewards, owner = ownable_factory
     initial_rate = await staking_rewards.rewardRate().call()
-    assert initial_rate.result.token == 0
-    new_rate = 3
-    await signer.send_transaction(owner, staking_rewards.contract_address, 'setRewardRate', [new_rate])
+    assert initial_rate.result.rate == uint(0)
+    new_rate = uint(3)
+    await signer.send_transaction(owner, staking_rewards.contract_address, 'setRewardRate', [*new_rate])
     updated_rate = await staking_rewards.rewardRate().call()
-    assert updated_rate.result.token == new_rate
+    assert updated_rate.result.rate == new_rate
