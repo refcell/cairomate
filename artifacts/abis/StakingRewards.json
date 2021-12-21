@@ -157,6 +157,42 @@
     {
         "inputs": [
             {
+                "name": "reward_token",
+                "type": "felt"
+            }
+        ],
+        "name": "setRewardToken",
+        "outputs": [],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "staking_token",
+                "type": "felt"
+            }
+        ],
+        "name": "setStakingToken",
+        "outputs": [],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "rate",
+                "type": "Uint256"
+            }
+        ],
+        "name": "setRewardRate",
+        "outputs": [],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "amount",
                 "type": "Uint256"
             }

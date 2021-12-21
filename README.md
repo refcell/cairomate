@@ -1,4 +1,4 @@
-# cairomate • [![Tests](https://github.com/a5f9t4/cairomate/actions/workflows/tests.yml/badge.svg)](https://github.com/a5f9t4/cairomate/actions/workflows/tests.yml) [![Lints](https://github.com/a5f9t4/cairomate/actions/workflows/lints.yml/badge.svg)](https://github.com/a5f9t4/cairomate/actions/workflows/lints.yml)
+# cairomate • [![Tests](https://github.com/a5f9t4/cairomate/actions/workflows/tests.yml/badge.svg)](https://github.com/a5f9t4/cairomate/actions/workflows/tests.yml) [![Lints](https://github.com/a5f9t4/cairomate/actions/workflows/lints.yml/badge.svg)](https://github.com/a5f9t4/cairomate/actions/workflows/lints.yml) ![GitHub](https://img.shields.io/github/license/a5f9t4/cairomate) ![GitHub package.json version](https://img.shields.io/github/package-json/v/a5f9t4/cairomate)
 
 
 **Structured**, **dependable** legos for starknet development.
@@ -8,19 +8,21 @@
 ```ml
 contracts
 ├─ defi
-   ├─ StakingRewards — "Flexible, stripped staking rewards measured by blocks"
+│  └─ ChainlinkPriceOracle — "Simple price oracle using Chainlink's V3 Aggregator"
+│  └─ StakingRewards — "Flexible, stripped staking rewards measured by blocks"
 ├─ interfaces
-   ├─ IAccount — "Account Interface"
-   ├─ IERC20 — "ERC20 Contract Interface"
-   ├─ IERC721 — "ERC721 Contract Interface"
+│  └─ IAccount — "Account Interface"
+│  └─ IAggregatorV3 — "Chainlink V3 Aggregator Interface"
+│  └─ IERC20 — "ERC20 Contract Interface"
+│  └─ IERC721 — "ERC721 Contract Interface"
 ├─ tokens
-   ├─ ERC20 — "Modern and gas efficient ERC20 + EIP-2612 implementation"
-   ├─ ERC721 — "Modern and gas efficient ERC721 + EIP-2612 implementation"
+│  └─ ERC20 — "Modern and gas efficient ERC20 + EIP-2612 implementation"
+│  └─ ERC721 — "Modern and gas efficient ERC721 + EIP-2612 implementation"
 ├─ utils
-   ├─ Account — "Stripped account"
-   ├─ Ownable — "Minimal, ownable contract instance"
-   ├─ Context — "Port of OZ's Solidity Context Abstraction"
-   ├─ Pausible — "Pausible Solidity Functionality"
+│  └─ Account — "Stripped account"
+│  └─ Ownable — "Minimal, ownable contract instance"
+│  └─ Context — "Port of OZ's Solidity Context Abstraction"
+│  └─ Pausible — "Pausible Solidity Functionality"
 tests
 ├─ test_StakingRewards — "Flexible, stripped staking rewards measured by blocks"
 ├─ test_ERC20 - "Test ERC20 contract"
