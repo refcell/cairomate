@@ -9,6 +9,7 @@
 contracts
 ├─ defi
 │  ├─ ChainlinkPriceOracle — "Simple price oracle using Chainlink's V3 Aggregator"
+│  ├─ MultiExchange — "Permissionless, ERC1155-based Multitoken Exchange"
 │  └─ StakingRewards — "Flexible, stripped staking rewards measured by blocks"
 ├─ interfaces
 │  ├─ IAccount — "Account Interface"
