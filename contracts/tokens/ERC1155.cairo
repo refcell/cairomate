@@ -316,56 +316,56 @@ end
 
 
 
-    function _mint(
-        address to, 
-        uint256 id, 
-        uint256 amount, 
-        bytes calldata data
-    ) internal {
-        balanceOf[to][id] += amount;
+    # function _mint(
+    #     address to, 
+    #     uint256 id, 
+    #     uint256 amount, 
+    #     bytes calldata data
+    # ) internal {
+    #     balanceOf[to][id] += amount;
 
-        if (to.code.length != 0) _callonERC1155Received(address(0), to, id, amount, gasleft(), data);
+    #     if (to.code.length != 0) _callonERC1155Received(address(0), to, id, amount, gasleft(), data);
 
-        emit TransferSingle(msg.sender, address(0), to, id, amount);
-    }
+    #     emit TransferSingle(msg.sender, address(0), to, id, amount);
+    # }
 
-    function _batchMint(
-        address to, 
-        uint256[] calldata ids, 
-        uint256[] calldata amounts, 
-        bytes calldata data
-    ) internal {
-        if (ids.length != amounts.length) revert ArrayParity();
+    # function _batchMint(
+    #     address to, 
+    #     uint256[] calldata ids, 
+    #     uint256[] calldata amounts, 
+    #     bytes calldata data
+    # ) internal {
+    #     if (ids.length != amounts.length) revert ArrayParity();
 
-        for (uint256 i = 0; i < ids.length; i++) {
-            balanceOf[to][ids[i]] += amounts[i];
-        }
+    #     for (uint256 i = 0; i < ids.length; i++) {
+    #         balanceOf[to][ids[i]] += amounts[i];
+    #     }
 
-        if (to.code.length != 0) _callonERC1155BatchReceived(address(0x0), to, ids, amounts, gasleft(), data);
+    #     if (to.code.length != 0) _callonERC1155BatchReceived(address(0x0), to, ids, amounts, gasleft(), data);
 
-        emit TransferBatch(msg.sender, address(0), to, ids, amounts);
-    }
+    #     emit TransferBatch(msg.sender, address(0), to, ids, amounts);
+    # }
 
-    function _burn(
-        address from, 
-        uint256 id, 
-        uint256 amount
-    ) internal {
-        balanceOf[from][id] -= amount;
+    # function _burn(
+    #     address from, 
+    #     uint256 id, 
+    #     uint256 amount
+    # ) internal {
+    #     balanceOf[from][id] -= amount;
 
-        emit TransferSingle(msg.sender, from, address(0x0), id, amount);
-    }
+    #     emit TransferSingle(msg.sender, from, address(0x0), id, amount);
+    # }
 
-    function _batchBurn(
-        address from, 
-        uint256[] calldata ids, 
-        uint256[] calldata amounts
-    ) internal {
-        if (ids.length != amounts.length) revert ArrayParity();
+    # function _batchBurn(
+    #     address from, 
+    #     uint256[] calldata ids, 
+    #     uint256[] calldata amounts
+    # ) internal {
+    #     if (ids.length != amounts.length) revert ArrayParity();
 
-        for (uint256 i = 0; i < ids.length; i++) {
-            balanceOf[from][ids[i]] -= amounts[i];
-        }
+    #     for (uint256 i = 0; i < ids.length; i++) {
+    #         balanceOf[from][ids[i]] -= amounts[i];
+    #     }
 
-        emit TransferBatch(msg.sender, from, address(0x0), ids, amounts);
-    }
+    #     emit TransferBatch(msg.sender, from, address(0x0), ids, amounts);
+    # }
