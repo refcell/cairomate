@@ -8,26 +8,29 @@
 ```ml
 contracts
 ├─ defi
-│  └─ ChainlinkPriceOracle — "Simple price oracle using Chainlink's V3 Aggregator"
+│  ├─ ChainlinkPriceOracle — "Simple price oracle using Chainlink's V3 Aggregator"
 │  └─ StakingRewards — "Flexible, stripped staking rewards measured by blocks"
 ├─ interfaces
-│  └─ IAccount — "Account Interface"
-│  └─ IAggregatorV3 — "Chainlink V3 Aggregator Interface"
-│  └─ IERC20 — "ERC20 Contract Interface"
-│  └─ IERC721 — "ERC721 Contract Interface"
+│  ├─ IAccount — "Account Interface"
+│  ├─ IAggregatorV3 — "Chainlink V3 Aggregator Interface"
+│  ├─ IERC20 — "ERC20 Contract Interface"
+│  ├─ IERC165 — "ERC165 Contract Interface"
+│  ├─ IERC721 — "ERC721 Contract Interface"
+│  └─ IERC1155 — "ERC1155 Contract Interface"
 ├─ tokens
-│  └─ ERC20 — "Modern and gas efficient ERC20 + EIP-2612 implementation"
-│  └─ ERC721 — "Modern and gas efficient ERC721 + EIP-2612 implementation"
+│  ├─ ERC20 — "Modern and gas efficient ERC20 + EIP-2612 implementation"
+│  ├─ ERC721 — "Modern and gas efficient ERC721 + EIP-2612 implementation"
+│  └─ ERC1155 — "Modern and gas efficient ERC1155 + EIP-165 implementation"
 ├─ utils
-│  └─ Account — "Stripped account"
-│  └─ Ownable — "Minimal, ownable contract instance"
-│  └─ Context — "Port of OZ's Solidity Context Abstraction"
+│  ├─ Account — "Stripped account"
+│  ├─ Ownable — "Minimal, ownable contract instance"
+│  ├─ Context — "Port of OZ's Solidity Context Abstraction"
 │  └─ Pausible — "Pausible Solidity Functionality"
 tests
 ├─ test_StakingRewards — "Flexible, stripped staking rewards measured by blocks"
 ├─ test_ERC20 - "Test ERC20 contract"
 ├─ test_ERC721 - "Test ERC721 contract"
-├─ test_Ownable - "Test Ownable contract"
+└─ test_Ownable - "Test Ownable contract"
 ```
 
 ## Installation
