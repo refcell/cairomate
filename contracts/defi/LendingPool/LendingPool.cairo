@@ -128,5 +128,6 @@ func deposit{
     amount: Uint256,
     referralCode: Uint256 # TODO: Should be Uint16
 ):
-    
+
+    return ()
 end
