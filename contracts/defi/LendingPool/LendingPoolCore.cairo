@@ -55,13 +55,50 @@ end
 ##               POOL LOGIC                ##
 #############################################
 
+@external
 func getReserveATokenAddress{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }(
     reserve: felt
-):
-    let (reserveData: RESERVE_DATA) = RESERVES.read(reserve)
-    return (reserveData.aTokenAddress)
+) -> (reserve: felt):
+    let (reserveData: felt) = RESERVES.read(reserve)
+    return (reserve=reserveData)
+
+    # TODO: convert to struct
+    # let (reserveData: RESERVE_DATA) = RESERVES.read(reserve)
+    # return (reserve=reserveData.aTokenAddress)
+end
+
+@external
+func getReserveIsActive{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    reserve: felt
+) -> (active: felt):
+    let (reserveData: felt) = RESERVES.read(reserve)
+    return (active=reserveData)
+
+    # TODO: convert to struct
+    # let (reserveData: RESERVE_DATA) = RESERVES.read(reserve)
+    # return (reserve=reserveData.isActive)
+end
+
+@external
+func getReserveIsFreezed{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    reserve: felt
+) -> (freezed: felt):
+    let (reserveData: felt) = RESERVES.read(reserve)
+    return (freezed=reserveData)
+
+    # TODO: convert to struct
+    # let (reserveData: RESERVE_DATA) = RESERVES.read(reserve)
+    # return (reserve=reserveData.isFreezed)
 end

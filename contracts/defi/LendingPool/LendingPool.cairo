@@ -1,5 +1,5 @@
 %lang starknet
-%builtins pedersen range_check
+# %builtins pedersen range_check ecdsa
 
 from starkware.starknet.common.syscalls import get_caller_address
 from starkware.cairo.common.cairo_builtins import HashBuiltin
@@ -11,7 +11,7 @@ from starkware.cairo.common.uint256 import (
 )
 
 ## Local Imports ##
-from contracts.defi.LendingPool.LendingPoolCore import getReserveATokenAddress, getReserveIsActive, getReserveIsFreezed
+from contracts.defi.LendingPool.LendingPoolCore import (getReserveATokenAddress, getReserveIsActive, getReserveIsFreezed)
 
 
 ## @title Lending Pool

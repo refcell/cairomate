@@ -1,0 +1,50 @@
+[
+    {
+        "inputs": [
+            {
+                "name": "reserve",
+                "type": "felt"
+            }
+        ],
+        "name": "getReserveATokenAddress",
+        "outputs": [
+            {
+                "name": "reserve",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "reserve",
+                "type": "felt"
+            }
+        ],
+        "name": "getReserveIsActive",
+        "outputs": [
+            {
+                "name": "active",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "reserve",
+                "type": "felt"
+            }
+        ],
+        "name": "getReserveIsFreezed",
+        "outputs": [
+            {
+                "name": "freezed",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    }
+]
