@@ -21,6 +21,15 @@ from starkware.cairo.common.uint256 import (
 
 
 #############################################
+##                 STORAGE                 ##
+#############################################
+
+# Returns 0 (false) or 1 (true)
+@storage_var
+func OPERATORS(owner: felt, operator: felt) -> (approved: felt):
+end
+
+#############################################
 ##               CONSTRUCTOR               ##
 #############################################
 
@@ -35,11 +44,60 @@ func constructor{
     decimals: felt, # 18
     totalSupply: Uint256,
 ):
-    NAME.write(name)
-    SYMBOL.write(symbol)
-    DECIMALS.write(decimals)
-    TOTAL_SUPPLY.write(totalSupply)
+    # NAME.write(name)
+    # SYMBOL.write(symbol)
+    # DECIMALS.write(decimals)
+    # TOTAL_SUPPLY.write(totalSupply)
     return ()
+end
+
+#############################################
+##                CORE LOGIC               ##
+#############################################
+
+@external
+func balanceOfBatch(
+    ## @dev Array arguments are defined by `<name>_len` felt and the data
+    ## @dev https://www.cairo-lang.org/docs/hello_starknet/more_features.html#array-arguments-in-calldata
+    _owners_len: felt,
+    _owners: felt*,
+    _ids_len: felt,
+    _ids: felt* # ?? Uint256* ??
+) -> (
+    balances_len: felt,
+    balances: felt* # ?? Uint256* ??
+):
+end
+
+
+@external
+func setApprovalForAll{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    _operator: felt,
+    _approved: felt
+):
+    alloc_locals
+    let (local caller: felt) = get_caller_address()
+    OPERATORS.write(caller, _operator, _approved)
+    return ()
+end
+
+@external
+func isApprovedForAll{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    _owner: felt,
+    _operator: felt
+) -> (
+    approved: felt
+):
+    let (approved: felt) = OPERATORS.read(_owner, _operator)
+    return (approved)
 end
 
 #############################################
