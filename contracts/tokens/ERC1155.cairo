@@ -1,5 +1,5 @@
 %lang starknet
-%builtins pedersen range_check
+%builtins pedersen range_check ecdsa
 
 from starkware.starknet.common.syscalls import get_caller_address
 from starkware.cairo.common.cairo_builtins import HashBuiltin
@@ -33,6 +33,9 @@ const ERC1155_BATCH_RECEIVED_VALUE = 0xbc197c81
 
 ## Selector ID for ERC1155 ##
 const ERC1155 = 0xd9b67a26
+
+## Selector ID for EIP165 Interface ##
+const EIP165_INTERFACE = 0x01ffc9a7
 
 ## Balance of a user,id pair ##
 @storage_var
@@ -86,24 +89,29 @@ func safeTransferFrom{
 
     # Check caller is the sender
     let (local caller: felt) = get_caller_address()
+    let (local approved: felt) = isApprovedForAll(_from, caller)
     if caller == _from:
     else:
         # Otherwise, the caller must be an approved operator
-        let (approved: felt) = isApprovedForAll(_from, caller)
         assert approved = 1
     end
+
+    # Check valid Uint256 value to prevent overflow
+    # uint256_check(_value)
 
     # Prevent 0 Address for spam manipulation
     assert_not_zero(_to)
 
     # Affect Sender's balance
-    let (initial_sender_balance: felt) = BALANCES.read(_from, _id)
+    let (local initial_sender_balance: felt) = BALANCES.read(_from, _id)
     let new_sender_balance = initial_sender_balance - _value
+    assert_nn_le(0, new_sender_balance)
     BALANCES.write(_from, _id, new_sender_balance)
 
     # Affect Recipient's balance
-    let (initial_recp_balance: felt) = BALANCES.read(_to, _id)
+    let (local initial_recp_balance: felt) = BALANCES.read(_to, _id)
     let new_recp_balance = initial_recp_balance + _value
+    assert_nn_le(0, new_recp_balance)
     BALANCES.write(_to, _id, new_recp_balance)
 
     return ()
@@ -128,10 +136,10 @@ func safeBatchTransferFrom{
 
     # Check caller is the sender
     let (local caller: felt) = get_caller_address()
+    let (approved: felt) = isApprovedForAll(_from, caller)
     if caller == _from:
     else:
         # Otherwise, the caller must be an approved operator
-        let (approved: felt) = isApprovedForAll(_from, caller)
         assert approved = 1
     end
 
@@ -270,7 +278,8 @@ func isApprovedForAll{
 ) -> (
     approved: felt
 ):
-    let (approved: felt) = OPERATORS.read(_owner, _operator)
+    alloc_locals
+    let (local approved: felt) = OPERATORS.read(_owner, _operator)
     return (approved)
 end
 
