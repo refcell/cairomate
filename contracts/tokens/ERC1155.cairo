@@ -12,6 +12,7 @@ from starkware.cairo.common.uint256 import (
 
 ## @title ERC1155
 ## @description A minimalistic implementation of ERC1155 Token Standard.
+## @description Adheres to the ERC1155 Token Standard: https://eips.ethereum.org/EIPS/eip-1155
 ## @author Alucard <github.com/a5f9t4>
 
 #############################################
@@ -39,4 +40,30 @@ func constructor{
     DECIMALS.write(decimals)
     TOTAL_SUPPLY.write(totalSupply)
     return ()
+end
+
+#############################################
+##             ERC-165 SUPPORT             ##
+#############################################
+
+@external
+func supportsInterface{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    interfaceID: felt # This should be a `bytes4`
+) -> (
+    supported: felt # Either 0 (false) or 1 (true)
+):
+    # Check ERC165 Interface Support
+    if interfaceID == 0xd9b67a26:
+        return (1)
+    end
+
+    # ERC165 Interface Support - 0x01ffc9a7
+    # This doesn't need to be checked since it is XORed with the above interfaceID
+
+    # return super.supportsInterface(_interfaceID);
+    return (0)
 end
