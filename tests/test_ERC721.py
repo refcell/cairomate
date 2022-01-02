@@ -20,7 +20,7 @@ async def ownable_factory():
     )
 
     erc721 = await starknet.deploy(
-        "contracts/tokens/ERC721.cairo",
+        "contracts/tokens/ERC721/ERC721.cairo",
         constructor_calldata=[
             str_to_felt("Test Contract"),
             str_to_felt("TEST"),
