@@ -24,8 +24,7 @@ async def ownable_factory():
         constructor_calldata=[
             str_to_felt("Test Contract"),
             str_to_felt("TEST"),
-            str_to_felt("BASE URI"),
-            *uint(1000)
+            str_to_felt("BASE URI")
         ]
     )
     return starknet, erc721, owner
@@ -40,5 +39,3 @@ async def test_constructor(ownable_factory):
     assert expected_symbol.result.symbol == str_to_felt("TEST")
     expected_base_uri = await erc721.baseURI().call()
     assert expected_base_uri.result.base_uri == str_to_felt("BASE URI")
-    expected_totalSupply = await erc721.totalSupply().call()
-    assert expected_totalSupply.result.totalSupply == uint(1000)

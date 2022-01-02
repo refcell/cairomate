@@ -36,7 +36,7 @@ func TOTAL_SUPPLY() -> (TOTAL_SUPPLY: Uint256):
 end
 
 @storage_var
-func OWNER(token_id: felt) -> (res: felt):
+func OWNER(token_id: Uint256) -> (res: felt):
 end
 
 @storage_var
@@ -44,15 +44,11 @@ func BALANCES(owner: felt) -> (res: Uint256):
 end
 
 @storage_var
-func TOKEN_APPROVALS(token_id: felt) -> (res: felt):
+func TOKEN_APPROVALS(token_id: Uint256) -> (res: felt):
 end
 
 @storage_var
 func ALLOWANCE(owner: felt, spender: felt) -> (REMAINING: Uint256):
-end
-
-@storage_var
-func INITIALIZED() -> (res: felt):
 end
 
 #############################################
@@ -83,31 +79,13 @@ func constructor{
 }(
     name: felt,
     symbol: felt,
-    base_uri: felt,
-    totalSupply: Uint256
+    base_uri: felt
 ):
     NAME.write(name)
     SYMBOL.write(symbol)
     BASE_URI.write(base_uri)
-    # TOTAL_SUPPLY.write(totalSupply)
-
-    ## Mint the total supply of tokens to the creator ##
-    let (caller) = get_caller_address()
-    _mint(caller, totalSupply)
 
     return()
-end
-
-@external
-func initialize{
-    syscall_ptr: felt*,
-    pedersen_ptr: HashBuiltin*,
-    range_check_ptr
-}():
-    let (_initialized) = INITIALIZED.read()
-    assert _initialized = 0
-    INITIALIZED.write(1)
-    return ()
 end
 
 #############################################
@@ -121,7 +99,7 @@ func approve{
     range_check_ptr
 }(
     to: felt,
-    token_id: felt
+    token_id: Uint256
 ):
     alloc_locals
     let (_owner) = OWNER.read(token_id)
@@ -149,10 +127,10 @@ func transfer{
     range_check_ptr
 }(
     recipient: felt,
-    amount: Uint256
+    token_id: Uint256
 ):
     let (sender) = get_caller_address()
-    _transfer(sender, recipient, amount)
+    _transfer(sender, recipient, token_id)
     return ()
 end
 
@@ -164,19 +142,19 @@ func transferFrom{
 }(
     sender: felt,
     recipient: felt,
-    amount: Uint256
+    token_id: Uint256
 ):
     alloc_locals
     let (local caller) = get_caller_address()
     let (local caller_allowance) = ALLOWANCE.read(owner=sender, spender=caller)
 
-    let (enough_allowance) = uint256_le(amount, caller_allowance)
+    let (enough_allowance) = uint256_le(Uint256(0,1), caller_allowance)
     assert_not_zero(enough_allowance)
 
-    _transfer(sender, recipient, amount)
+    _transfer(sender, recipient, token_id)
 
     # subtract allowance
-    let (new_allowance: Uint256) = uint256_sub(caller_allowance, amount)
+    let (new_allowance: Uint256) = uint256_sub(caller_allowance, Uint256(0,1))
     ALLOWANCE.write(sender, caller, new_allowance)
     return ()
 end
@@ -191,7 +169,7 @@ func _is_approved_or_owner{
     range_check_ptr
 }(
     to: felt,
-    token_id: felt
+    token_id: Uint256
 ):
     alloc_locals
     let (local res) = TOKEN_APPROVALS.read(token_id)
@@ -212,15 +190,22 @@ func _mint{
     range_check_ptr
 }(
     recipient: felt,
-    amount: Uint256
+    token_id: Uint256
 ):
+    assert_not_zero(recipient) #invalid recipient
+    let (token_owner) = OWNER.read(token_id)
+    assert token_owner = 0 #already minted
+
     let (res) = BALANCES.read(owner=recipient)
-    let (new_balance, _: Uint256) = uint256_add(res, amount)
+    let (new_balance, _: Uint256) = uint256_add(res, Uint256(0,1))
     BALANCES.write(recipient, new_balance)
 
     let (supply) = TOTAL_SUPPLY.read()
-    let (new_supply, _: Uint256) = uint256_add(supply, amount)
+    let (new_supply, _: Uint256) = uint256_add(supply, Uint256(0,1))
     TOTAL_SUPPLY.write(new_supply)
+
+    OWNER.write(token_id, recipient)
+
     return ()
 end
 
@@ -231,20 +216,20 @@ func _transfer{
 }(
     sender: felt,
     recipient: felt,
-    amount: Uint256
+    token_id: Uint256
 ):
     alloc_locals
     let (local sender_balance) = BALANCES.read(owner=sender)
 
-    let (enough_balance) = uint256_le(amount, sender_balance)
+    let (enough_balance) = uint256_le(Uint256(0,1), sender_balance)
     assert_not_zero(enough_balance)
 
-    let (new_sender_balance: Uint256) = uint256_sub(sender_balance, amount)
+    let (new_sender_balance: Uint256) = uint256_sub(sender_balance, Uint256(0,1))
     BALANCES.write(sender, new_sender_balance)
 
     ## Add to recipient ##
     let (recipient_balance: Uint256) = BALANCES.read(recipient)
-    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, amount)
+    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, Uint256(0,1))
     BALANCES.write(recipient, new_recipient_balance)
 
     return ()
@@ -299,7 +284,7 @@ func ownerOf{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}(token_id: felt) -> (res: felt):
+}(token_id: Uint256) -> (res: felt):
     let (res) = OWNER.read(token_id=token_id)
     return (res)
 end
@@ -334,7 +319,7 @@ func getApproved{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }(
-    token_id: felt
+    token_id: Uint256
 ) -> (res: felt):
     let (res) = TOKEN_APPROVALS.read(token_id=token_id)
     return (res)
