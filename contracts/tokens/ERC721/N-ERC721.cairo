@@ -3,7 +3,7 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin, BitwiseBuiltin
 from starkware.starknet.common.syscalls import get_caller_address
-from starkware.cairo.common.math import assert_nn_le, assert_not_zero, assert_not_equal
+from starkware.cairo.common.math import assert_nn_le, assert_not_zero
 from starkware.cairo.common.bitwise import bitwise_or
 
 ## @title ERC721
@@ -205,7 +205,7 @@ func _burn{
     tokenId: felt
 ):
     let (owner) = _owners.read(tokenId)
-    assert_not_equal(owner, 0) #not minted
+    assert_not_zero(owner) #not minted
 
     let (currentOwnerBalance) = _balances.read(owner)
     _balances.write(owner, currentOwnerBalance - 1)
