@@ -3,10 +3,10 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin, BitwiseBuiltin
 from starkware.starknet.common.syscalls import get_caller_address
-from starkware.cairo.common.math import assert_nn_le, assert_not_zero
+from starkware.cairo.common.math import assert_not_zero
 from starkware.cairo.common.bitwise import bitwise_or
 
-## @title ERC721
+## @title N-ERC721
 ## @description A minimalistic implementation of ERC721 Token Standard using only felts.
 ## @description Adapted from Solmate: https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol
 ## @authors Alucard <github.com/a5f9t4> exp.table <github.com/exp-table>
@@ -32,7 +32,7 @@ func _totalSupply() -> (totalSupply: felt):
 end
 
 @storage_var
-func _owners(token_id: felt) -> (owner: felt):
+func _owners(tokenId: felt) -> (owner: felt):
 end
 
 @storage_var
@@ -40,7 +40,7 @@ func _balances(owner: felt) -> (balance: felt):
 end
 
 @storage_var
-func _tokenApprovals(token_id: felt) -> (res: felt):
+func _tokenApprovals(tokenId: felt) -> (res: felt):
 end
 
 @storage_var
@@ -90,7 +90,7 @@ end
 func approve{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
-    bitwise_ptr : BitwiseBuiltin*,
+    bitwise_ptr: BitwiseBuiltin*,
     range_check_ptr
 }(
     spender: felt,
@@ -126,6 +126,34 @@ func setApprovalForAll{
 end
 
 @external
+func transfer{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    recipient: felt,
+    tokenId: felt
+):
+    let (sender) = get_caller_address()
+    let (owner) = _owners.read(tokenId)
+    assert sender = owner
+    assert_not_zero(recipient)
+
+    let (ownerBalance) = _balances.read(sender)
+    let (recipientBalance) = _balances.read(recipient)
+
+    _balances.write(sender, ownerBalance - 1)
+    _balances.write(recipient, recipientBalance + 1)
+
+    _owners.write(tokenId, recipient)
+
+    _tokenApprovals.write(tokenId, 0)
+
+    return ()
+end
+
+@external
 func transferFrom{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
@@ -139,7 +167,7 @@ func transferFrom{
     let (caller) = get_caller_address()
     let (owner) = _owners.read(tokenId)
 
-    assert sender = owner #wrong sender
+    assert sender = owner # wrong sender
 
     assert_not_zero(recipient)
 
@@ -157,11 +185,11 @@ func transferFrom{
     let (canTransfer) = bitwise_or(canTransfer1, isApprovedForAll)
     assert canTransfer = 1
 
-    let (previousOwnerBalance) = _balances.read(sender)
-    let (newOwnerBalance) = _balances.read(recipient)
+    let (ownerBalance) = _balances.read(sender)
+    let (recipientBalance) = _balances.read(recipient)
 
-    _balances.write(sender, previousOwnerBalance - 1)
-    _balances.write(recipient, newOwnerBalance + 1)
+    _balances.write(sender, ownerBalance - 1)
+    _balances.write(recipient, recipientBalance + 1)
 
     _owners.write(tokenId, recipient)
 
@@ -183,8 +211,8 @@ func _mint{
     tokenId: felt
 ):
     assert_not_zero(recipient) #invalid recipient
-    let (token_owner) = _owners.read(tokenId)
-    assert token_owner = 0 #already minted
+    let (tokenOwner) = _owners.read(tokenId)
+    assert tokenOwner = 0 #already minted
 
     let (currentBalance) = _balances.read(owner=recipient)
     _balances.write(recipient, currentBalance + 1)
