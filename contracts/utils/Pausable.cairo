@@ -8,7 +8,7 @@ from starkware.starknet.common.syscalls import get_caller_address
 ## @title Pausable
 ## @description A mirror of the Openzeppelin Pausable pattern
 ## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
-## @author Alucard <github.com/a5f9t4>
+## @author velleity <github.com/a5f9t4>
 
 #############################################
 ##                STORAGE                  ##

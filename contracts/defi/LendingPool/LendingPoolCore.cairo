@@ -13,7 +13,7 @@ from starkware.cairo.common.uint256 import (
 ## @title Lending Pool Core
 ## @description Refactored Core Logic for the Lending Pool
 ## @description Adapted from Aave's Lending Pool https://github.com/aave/aave-protocol
-## @author Alucard <github.com/a5f9t4>
+## @author velleity <github.com/a5f9t4>
 
 #############################################
 ##               MODIFIERS                 ##

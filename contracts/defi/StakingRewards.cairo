@@ -17,7 +17,7 @@ from contracts.interfaces.IERC20 import IERC20
 ## @title Staking Rewards
 ## @description A stripped down implementation of Synthetix StakingRewards.sol
 ## @description Adapted from https://solidity-by-example.org/defi/staking-rewards/
-## @author Alucard <github.com/a5f9t4>
+## @author velleity <github.com/a5f9t4>
 
 #############################################
 ##                 STORAGE                 ##
@@ -298,7 +298,7 @@ func stake{
     ## Transfer from caller to contract ##
     let (local staking_token) = STAKING_TOKEN.read()
     let (contract_address) = get_contract_address()
-    IERC20.transferFrom(
+    IERC20.transfer_from(
         contract_address=staking_token,
         sender=caller,
         recipient=contract_address,
@@ -338,7 +338,7 @@ func withdraw{
     ## Transfer from caller to contract ##
     let (local staking_token) = STAKING_TOKEN.read()
     let (contract_address) = get_contract_address()
-    IERC20.transferFrom(
+    IERC20.transfer_from(
         contract_address=staking_token,
         sender=contract_address,
         recipient=caller,

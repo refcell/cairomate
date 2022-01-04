@@ -16,6 +16,7 @@ contracts
 │  ├─ IERC20 — "ERC20 Contract Interface"
 │  ├─ IERC165 — "ERC165 Contract Interface"
 │  ├─ IERC721 — "ERC721 Contract Interface"
+|  ├─ INERC721 — "N-ERC721 Contract Interface (felt-based ERC721)"
 │  └─ IERC1155 — "ERC1155 Contract Interface"
 ├─ tokens
 │  ├─ ERC20 — "Modern and gas efficient ERC20 + EIP-2612 implementation"

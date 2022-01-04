@@ -5,7 +5,7 @@ from starkware.cairo.common.uint256 import Uint256
 ## @title ERC1155 Interface
 ## @description An interface for the ERC1155 standard.
 ## @description Follows https://eips.ethereum.org/EIPS/eip-1155
-## @author Alucard <github.com/a5f9t4>
+## @author velleity <github.com/a5f9t4>
 
 @contract_interface
 namespace IERC1155:

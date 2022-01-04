@@ -14,7 +14,7 @@ from starkware.cairo.common.alloc import alloc
 ## @title ERC1155
 ## @description A minimalistic implementation of ERC1155 Token Standard.
 ## @description Adheres to the ERC1155 Token Standard: https://eips.ethereum.org/EIPS/eip-1155
-## @author Alucard <github.com/a5f9t4>
+## @author velleity <github.com/a5f9t4>
 
 #############################################
 ##                METADATA                 ##

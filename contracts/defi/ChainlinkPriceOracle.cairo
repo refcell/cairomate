@@ -11,7 +11,7 @@ from contracts.interfaces.IAggregatorV3 import IAggregatorV3
 ## @title Chainlink Price Oracle
 ## @description A price oracle that fetches data from a Chainlink V3 Aggregator contract.
 ## @description Adapted from https://solidity-by-example.org/defi/chainlink-price-oracle/
-## @author Alucard <github.com/a5f9t4>
+## @author velleity <github.com/a5f9t4>
 
 #############################################
 ##                 STORAGE                 ##

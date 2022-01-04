@@ -2,8 +2,8 @@
 
 from starkware.cairo.common.uint256 import Uint256
 
-## @title ERC721 Interface
-## @description An interface for the ERC721 standard.
+## @title N-ERC721 Interface
+## @description An interface for N-ERC721, an entirely felt-based ERC721 Implementation.
 ## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
 ## @author velleity <github.com/a5f9t4>
 
