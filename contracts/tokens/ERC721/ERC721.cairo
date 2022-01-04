@@ -1,30 +1,28 @@
 %lang starknet
-%builtins pedersen range_check ecdsa
+%builtins pedersen range_check ecdsa bitwise
 
-from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
+from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin, BitwiseBuiltin
 from starkware.starknet.common.syscalls import get_caller_address
-from starkware.cairo.common.math import assert_nn_le, assert_not_zero
-from starkware.cairo.common.uint256 import Uint256, uint256_le, uint256_sub, uint256_add
+from starkware.cairo.common.math import assert_not_zero
+from starkware.cairo.common.bitwise import bitwise_or
+from starkware.cairo.common.uint256 import Uint256, uint256_sub, uint256_add
 
 ## @title ERC721
 ## @description A minimalistic implementation of ERC721 Token Standard.
+## @dev Uses the common uint256 type for compatibility with the base evm.
 ## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
-## @author Alucard <github.com/a5f9t4>
+## @author velleity <github.com/a5f9t4> exp.table <github.com/exp-table>
 
 #############################################
 ##                METADATA                 ##
 #############################################
 
 @storage_var
-func NAME() -> (NAME: felt):
+func _name() -> (name: felt):
 end
 
 @storage_var
-func SYMBOL() -> (SYMBOL: felt):
-end
-
-@storage_var
-func BASE_URI() -> (BASE_URI: felt):
+func _symbol() -> (symbol: felt):
 end
 
 #############################################
@@ -32,23 +30,23 @@ end
 #############################################
 
 @storage_var
-func TOTAL_SUPPLY() -> (TOTAL_SUPPLY: Uint256):
+func _totalSupply() -> (totalSupply: Uint256):
 end
 
 @storage_var
-func OWNER(token_id: Uint256) -> (res: felt):
+func _owners(tokenId: Uint256) -> (owner: felt):
 end
 
 @storage_var
-func BALANCES(owner: felt) -> (res: Uint256):
+func _balances(owner: felt) -> (balance: Uint256):
 end
 
 @storage_var
-func TOKEN_APPROVALS(token_id: Uint256) -> (res: felt):
+func _tokenApprovals(tokenId: Uint256) -> (approved: felt):
 end
 
 @storage_var
-func ALLOWANCE(owner: felt, spender: felt) -> (REMAINING: Uint256):
+func _isApprovedForAll(owner: felt, spender: felt) -> (approved: felt):
 end
 
 #############################################
@@ -78,12 +76,10 @@ func constructor{
     range_check_ptr
 }(
     name: felt,
-    symbol: felt,
-    base_uri: felt
+    symbol: felt
 ):
-    NAME.write(name)
-    SYMBOL.write(symbol)
-    BASE_URI.write(base_uri)
+    _name.write(name)
+    _symbol.write(symbol)
 
     return()
 end
@@ -96,27 +92,38 @@ end
 func approve{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
+    bitwise_ptr: BitwiseBuiltin*,
     range_check_ptr
 }(
-    to: felt,
-    token_id: Uint256
+    spender: felt,
+    tokenId: Uint256
 ):
-    alloc_locals
-    let (_owner) = OWNER.read(token_id)
-    let (local res) = TOKEN_APPROVALS.read(token_id)
     let (caller) = get_caller_address()
 
-    if caller == _owner:
-        return ()
+    let (owner) = _owners.read(tokenId)
+    tempvar callerIsOwner = 0 #false by default
+    if caller == owner:
+        callerIsOwner = 1
     end
+    let (approved) = _isApprovedForAll.read(owner, caller)
+    let (canApprove) = bitwise_or(callerIsOwner, approved)
+    assert canApprove = 1
 
-    if _owner == to:
-        assert 1 = 0
-    end
+    _tokenApprovals.write(tokenId, spender)
+    return ()
+end
 
-    assert res = caller
-
-    TOKEN_APPROVALS.write(token_id, to)
+@external
+func setApprovalForAll{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    operator: felt,
+    approved: felt
+):
+    let (caller) = get_caller_address()
+    _isApprovedForAll.write(caller, operator, approved)
     return ()
 end
 
@@ -124,13 +131,30 @@ end
 func transfer{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
     range_check_ptr
 }(
     recipient: felt,
-    token_id: Uint256
+    tokenId: Uint256
 ):
     let (sender) = get_caller_address()
-    _transfer(sender, recipient, token_id)
+    let (owner) = _owners.read(tokenId)
+    assert sender = owner
+    assert_not_zero(recipient)
+
+    let (ownerBalance) = _balances.read(sender)
+    let (newOwnerBalance: Uint256) = uint256_sub(ownerBalance, Uint256(0,1))
+
+    let (recipientBalance) = _balances.read(recipient)
+    let (newRecipientBalance, _: Uint256) = uint256_add(recipientBalance, Uint256(0,1))
+
+    _balances.write(sender, newOwnerBalance)
+    _balances.write(recipient, newRecipientBalance)
+
+    _owners.write(tokenId, recipient)
+
+    _tokenApprovals.write(tokenId, 0)
+
     return ()
 end
 
@@ -138,24 +162,47 @@ end
 func transferFrom{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
     range_check_ptr
 }(
     sender: felt,
     recipient: felt,
-    token_id: Uint256
+    tokenId: Uint256
 ):
-    alloc_locals
-    let (local caller) = get_caller_address()
-    let (local caller_allowance) = ALLOWANCE.read(owner=sender, spender=caller)
+    let (caller) = get_caller_address()
+    let (owner) = _owners.read(tokenId)
 
-    let (enough_allowance) = uint256_le(Uint256(0,1), caller_allowance)
-    assert_not_zero(enough_allowance)
+    assert sender = owner # wrong sender
 
-    _transfer(sender, recipient, token_id)
+    assert_not_zero(recipient)
 
-    # subtract allowance
-    let (new_allowance: Uint256) = uint256_sub(caller_allowance, Uint256(0,1))
-    ALLOWANCE.write(sender, caller, new_allowance)
+    tempvar isCallerOwner = 0
+    if owner == caller:
+        isCallerOwner = 1
+    end
+    let (approvedSpender) = _tokenApprovals.read(tokenId)
+    tempvar isApproved = 0
+    if approvedSpender == caller:
+        isApproved = 1
+    end
+    let (isApprovedForAll) = _isApprovedForAll.read(owner, caller)
+    let (canTransfer1) = bitwise_or(isCallerOwner, isApproved)
+    let (canTransfer) = bitwise_or(canTransfer1, isApprovedForAll)
+    assert canTransfer = 1
+
+    let (ownerBalance) = _balances.read(sender)
+    let (newOwnerBalance: Uint256) = uint256_sub(ownerBalance, Uint256(0,1))
+
+    let (recipientBalance) = _balances.read(recipient)
+    let (newRecipientBalance, _: Uint256) = uint256_add(recipientBalance, Uint256(0,1))
+
+    _balances.write(sender, newOwnerBalance)
+    _balances.write(recipient, newRecipientBalance)
+
+    _owners.write(tokenId, recipient)
+
+    _tokenApprovals.write(tokenId, 0)
+
     return ()
 end
 
@@ -163,74 +210,51 @@ end
 ##             INTERNAL LOGIC              ##
 #############################################
 
-func _is_approved_or_owner{
-    syscall_ptr: felt*,
-    pedersen_ptr: HashBuiltin*,
-    range_check_ptr
-}(
-    to: felt,
-    token_id: Uint256
-):
-    alloc_locals
-    let (local res) = TOKEN_APPROVALS.read(token_id)
-    let (caller) = get_caller_address()
-    let (_owner) = OWNER.read(token_id)
-
-    if caller == _owner:
-        return ()
-    end
-
-    assert res = caller
-    return ()
-end
-
 func _mint{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }(
     recipient: felt,
-    token_id: Uint256
+    tokenId: Uint256
 ):
     assert_not_zero(recipient) #invalid recipient
-    let (token_owner) = OWNER.read(token_id)
-    assert token_owner = 0 #already minted
+    let (tokenOwner) = _owners.read(tokenId)
+    assert tokenOwner = 0 #already minted
 
-    let (res) = BALANCES.read(owner=recipient)
-    let (new_balance, _: Uint256) = uint256_add(res, Uint256(0,1))
-    BALANCES.write(recipient, new_balance)
+    let (currentBalance) = _balances.read(owner=recipient)
+    let (newBalance, _: Uint256) = uint256_add(currentBalance, Uint256(0,1))
+    _balances.write(recipient, newBalance)
 
-    let (supply) = TOTAL_SUPPLY.read()
-    let (new_supply, _: Uint256) = uint256_add(supply, Uint256(0,1))
-    TOTAL_SUPPLY.write(new_supply)
+    let (currentSupply) = _totalSupply.read()
+    let (newSupply, _: Uint256) = uint256_add(currentSupply, Uint256(0,1))
+    _totalSupply.write(newSupply)
 
-    OWNER.write(token_id, recipient)
+    _owners.write(tokenId, recipient)
 
     return ()
 end
 
-func _transfer{
+func _burn{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }(
-    sender: felt,
-    recipient: felt,
-    token_id: Uint256
+    tokenId: Uint256
 ):
-    alloc_locals
-    let (local sender_balance) = BALANCES.read(owner=sender)
+    let (owner) = _owners.read(tokenId)
+    assert_not_zero(owner) #not minted
 
-    let (enough_balance) = uint256_le(Uint256(0,1), sender_balance)
-    assert_not_zero(enough_balance)
+    let (currentBalance) = _balances.read(owner)
+    let (newBalance: Uint256) = uint256_sub(currentBalance, Uint256(0,1))
+    _balances.write(owner, newBalance)
 
-    let (new_sender_balance: Uint256) = uint256_sub(sender_balance, Uint256(0,1))
-    BALANCES.write(sender, new_sender_balance)
+    let (currentSupply) = _totalSupply.read()
+    let (newSupply: Uint256) = uint256_sub(currentSupply, Uint256(0,1))
+    _totalSupply.write(newSupply)
 
-    ## Add to recipient ##
-    let (recipient_balance: Uint256) = BALANCES.read(recipient)
-    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, Uint256(0,1))
-    BALANCES.write(recipient, new_recipient_balance)
+    _owners.write(tokenId, 0)
+    _tokenApprovals.write(tokenId, 0)
 
     return ()
 end
@@ -245,8 +269,8 @@ func name{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }() -> (name: felt):
-    let (_name) = NAME.read()
-    return (name=_name)
+    let (name) = _name.read()
+    return (name)
 end
 
 @view
@@ -255,18 +279,8 @@ func symbol{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }() -> (symbol: felt):
-    let (_symbol) = SYMBOL.read()
-    return (symbol=_symbol)
-end
-
-@view
-func baseURI{
-    syscall_ptr: felt*,
-    pedersen_ptr: HashBuiltin*,
-    range_check_ptr
-}() -> (base_uri: felt):
-    let (_base_uri) = BASE_URI.read()
-    return (base_uri=_base_uri)
+    let (symbol) = _symbol.read()
+    return (symbol)
 end
 
 @view
@@ -275,8 +289,8 @@ func totalSupply{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }() -> (totalSupply: Uint256):
-    let (_total_supply: Uint256) = TOTAL_SUPPLY.read()
-    return (totalSupply=_total_supply)
+    let (totalSupply: Uint256) = _totalSupply.read()
+    return (totalSupply)
 end
 
 @view
@@ -284,9 +298,9 @@ func ownerOf{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}(token_id: Uint256) -> (res: felt):
-    let (res) = OWNER.read(token_id=token_id)
-    return (res)
+}(tokenId: Uint256) -> (owner: felt):
+    let (owner) = _owners.read(tokenId)
+    return (owner)
 end
 
 
@@ -295,22 +309,9 @@ func balanceOf{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}(account: felt) -> (balance: Uint256):
-    let (_balance: Uint256) = BALANCES.read(owner=account)
-    return (balance=_balance)
-end
-
-@view
-func allowance{
-    syscall_ptr: felt*,
-    pedersen_ptr: HashBuiltin*,
-    range_check_ptr
-}(
-    owner: felt,
-    spender: felt
-) -> (remaining: Uint256):
-    let (REMAINING: Uint256) = ALLOWANCE.read(owner=owner, spender=spender)
-    return (remaining=REMAINING)
+}(owner: felt) -> (balance: Uint256):
+    let (balance: Uint256) = _balances.read(owner)
+    return (balance)
 end
 
 @view
@@ -318,9 +319,17 @@ func getApproved{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}(
-    token_id: Uint256
-) -> (res: felt):
-    let (res) = TOKEN_APPROVALS.read(token_id=token_id)
-    return (res)
+}(tokenId: Uint256) -> (spender: felt):
+    let (spender) = _tokenApprovals.read(tokenId)
+    return (spender)
+end
+
+@view
+func isApprovedForAll{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(owner: felt, operator: felt) -> (approved: felt):
+    let (approved) = _isApprovedForAll.read(owner, operator)
+    return (approved)
 end
