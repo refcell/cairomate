@@ -20,15 +20,15 @@ from starkware.cairo.common.uint256 import (
 #############################################
 
 @storage_var
-func NAME() -> (NAME: felt):
+func _name() -> (name: felt):
 end
 
 @storage_var
-func SYMBOL() -> (SYMBOL: felt):
+func _symbol() -> (symbol: felt):
 end
 
 @storage_var
-func DECIMALS() -> (DECIMALS: felt):
+func _decimals() -> (decimals: felt):
 end
 
 #############################################
@@ -36,15 +36,15 @@ end
 #############################################
 
 @storage_var
-func TOTAL_SUPPLY() -> (TOTAL_SUPPLY: Uint256):
+func _totalSupply() -> (totalSupply: Uint256):
 end
 
 @storage_var
-func BALANCE_OF(account: felt) -> (BALANCE: Uint256):
+func _balances(owner: felt) -> (balance: Uint256):
 end
 
 @storage_var
-func ALLOWANCE(owner: felt, spender: felt) -> (REMAINING: Uint256):
+func _allowances(owner: felt, spender: felt) -> (allowance: Uint256):
 end
 
 #############################################
@@ -74,10 +74,10 @@ func constructor{
     decimals: felt, # 18
     totalSupply: Uint256,
 ):
-    NAME.write(name)
-    SYMBOL.write(symbol)
-    DECIMALS.write(decimals)
-    TOTAL_SUPPLY.write(totalSupply)
+    _name.write(name)
+    _symbol.write(symbol)
+    _decimals.write(decimals)
+    _totalSupply.write(totalSupply)
     return ()
 end
 
@@ -103,7 +103,7 @@ func approve{
     uint256_check(amount)
 
     ## EFFECTS ##
-    ALLOWANCE.write(caller, spender, amount)
+    _allowances.write(caller, spender, amount)
 
     ## NO INTERACTIONS ##
 
@@ -122,7 +122,7 @@ func increaseAllowance{
     alloc_locals
     uint256_check(amount)
     let (local caller) = get_caller_address()
-    let (local current_allowance: Uint256) = ALLOWANCE.read(caller, spender)
+    let (local current_allowance: Uint256) = _allowances.read(caller, spender)
 
     ## Check allowance overflow ##
     let (local new_allowance: Uint256, is_overflow) = uint256_add(current_allowance, amount)
@@ -131,7 +131,7 @@ func increaseAllowance{
     assert_not_zero(caller)
     assert_not_zero(spender)
     uint256_check(amount)
-    ALLOWANCE.write(caller, spender, amount)
+    _allowances.write(caller, spender, amount)
 
     return (1) # Starknet's `true`
 end
@@ -148,7 +148,7 @@ func decreaseAllowance{
     alloc_locals
     uint256_check(amount)
     let (local caller) = get_caller_address()
-    let (local current_allowance: Uint256) = ALLOWANCE.read(caller, spender)
+    let (local current_allowance: Uint256) = _allowances.read(caller, spender)
     let (local new_allowance: Uint256) = uint256_sub(current_allowance, amount)
 
     ## Validate allowance decrease ##
@@ -158,7 +158,7 @@ func decreaseAllowance{
     assert_not_zero(caller)
     assert_not_zero(spender)
     uint256_check(amount)
-    ALLOWANCE.write(caller, spender, amount)
+    _allowances.write(caller, spender, amount)
 
     return (1) # Starknet's `true`
 end
@@ -191,7 +191,7 @@ func transferFrom{
 ) -> (success: felt):
     alloc_locals
     let (local caller) = get_caller_address()
-    let (local caller_allowance: Uint256) = ALLOWANCE.read(owner=sender, spender=caller)
+    let (local caller_allowance: Uint256) = _allowances.read(owner=sender, spender=caller)
 
     ## Validate allowance decrease ##
     let (enough_allowance) = uint256_le(amount, caller_allowance)
@@ -201,7 +201,7 @@ func transferFrom{
 
     # subtract allowance
     let (new_allowance: Uint256) = uint256_sub(caller_allowance, amount)
-    ALLOWANCE.write(sender, caller, new_allowance)
+    _allowances.write(sender, caller, new_allowance)
 
     return (1) # Starknet's `true`
 end
@@ -223,19 +223,19 @@ func _transfer{
     assert_not_zero(recipient)
     uint256_check(amount)
 
-    let (local sender_balance: Uint256) = BALANCE_OF.read(account=sender)
+    let (local sender_balance: Uint256) = _balances.read(owner=sender)
     let (enough_balance) = uint256_le(amount, sender_balance)
     assert_not_zero(enough_balance)
 
     ## EFFECTS ##
     ## Subtract from sender ##
     let (new_sender_balance: Uint256) = uint256_sub(sender_balance, amount)
-    BALANCE_OF.write(sender, new_sender_balance)
+    _balances.write(sender, new_sender_balance)
 
     ## Add to recipient ##
-    let (recipient_balance: Uint256) = BALANCE_OF.read(account=recipient)
+    let (recipient_balance: Uint256) = _balances.read(owner=recipient)
     let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, amount)
-    BALANCE_OF.write(recipient, new_recipient_balance)
+    _balances.write(recipient, new_recipient_balance)
 
     ## NO INTERACTIONS ##
 
@@ -252,8 +252,8 @@ func name{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }() -> (name: felt):
-    let (_name) = NAME.read()
-    return (name=_name)
+    let (name) = _name.read()
+    return (name)
 end
 
 @view
@@ -262,8 +262,8 @@ func symbol{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }() -> (symbol: felt):
-    let (_symbol) = SYMBOL.read()
-    return (symbol=_symbol)
+    let (symbol) = _symbol.read()
+    return (symbol)
 end
 
 @view
@@ -272,8 +272,8 @@ func totalSupply{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }() -> (totalSupply: Uint256):
-    let (_total_supply: Uint256) = TOTAL_SUPPLY.read()
-    return (totalSupply=_total_supply)
+    let (totalSupply: Uint256) = _totalSupply.read()
+    return (totalSupply)
 end
 
 @view
@@ -282,8 +282,8 @@ func decimals{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }() -> (decimals: felt):
-    let (_decimals) = DECIMALS.read()
-    return (decimals=_decimals)
+    let (decimals) = _decimals.read()
+    return (decimals)
 end
 
 @view
@@ -291,9 +291,9 @@ func balanceOf{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}(account: felt) -> (balance: Uint256):
-    let (_balance: Uint256) = BALANCE_OF.read(account=account)
-    return (balance=_balance)
+}(owner: felt) -> (balance: Uint256):
+    let (balance: Uint256) = _balances.read(owner)
+    return (balance)
 end
 
 @view
@@ -304,7 +304,7 @@ func allowance{
 }(
     owner: felt,
     spender: felt
-) -> (remaining: Uint256):
-    let (REMAINING: Uint256) = ALLOWANCE.read(owner=owner, spender=spender)
-    return (remaining=REMAINING)
+) -> (allowance: Uint256):
+    let (allowance: Uint256) = _allowances.read(owner=owner, spender=spender)
+    return (allowance)
 end
