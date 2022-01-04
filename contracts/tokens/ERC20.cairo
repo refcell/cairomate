@@ -36,7 +36,7 @@ end
 #############################################
 
 @storage_var
-func _totalSupply() -> (totalSupply: Uint256):
+func _total_supply() -> (total_supply: Uint256):
 end
 
 @storage_var
@@ -72,12 +72,12 @@ func constructor{
     name: felt,
     symbol: felt,
     decimals: felt, # 18
-    totalSupply: Uint256,
+    total_supply: Uint256,
 ):
     _name.write(name)
     _symbol.write(symbol)
     _decimals.write(decimals)
-    _totalSupply.write(totalSupply)
+    _total_supply.write(total_supply)
     return ()
 end
 
@@ -111,7 +111,7 @@ func approve{
 end
 
 @external
-func increaseAllowance{
+func increase_allowance{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
@@ -137,7 +137,7 @@ func increaseAllowance{
 end
 
 @external
-func decreaseAllowance{
+func decrease_allowance{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
@@ -180,7 +180,7 @@ func transfer{
 end
 
 @external
-func transferFrom{
+func transfer_from{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
@@ -267,13 +267,13 @@ func symbol{
 end
 
 @view
-func totalSupply{
+func total_supply{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}() -> (totalSupply: Uint256):
-    let (totalSupply: Uint256) = _totalSupply.read()
-    return (totalSupply)
+}() -> (total_supply: Uint256):
+    let (total_supply: Uint256) = _total_supply.read()
+    return (total_supply)
 end
 
 @view
@@ -287,7 +287,7 @@ func decimals{
 end
 
 @view
-func balanceOf{
+func balance_of{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr

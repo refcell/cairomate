@@ -37,5 +37,5 @@ async def test_constructor(ownable_factory):
     assert expected_symbol.result.symbol == str_to_felt("TEST")
     expected_decimals = await erc20.decimals().call()
     assert expected_decimals.result.decimals == 18
-    expected_totalSupply = await erc20.totalSupply().call()
-    assert expected_totalSupply.result.totalSupply == uint(1000)
+    expected_total_supply = await erc20.total_supply().call()
+    assert expected_total_supply.result.total_supply == uint(1000)
