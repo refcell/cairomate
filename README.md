@@ -19,7 +19,9 @@ contracts
 │  └─ IERC1155 — "ERC1155 Contract Interface"
 ├─ tokens
 │  ├─ ERC20 — "Modern and gas efficient ERC20 + EIP-2612 implementation"
-│  ├─ ERC721 — "Modern and gas efficient ERC721 + EIP-2612 implementation"
+│  ├─ ERC721
+│  │  ├─ ERC721 - "Modern and gas efficient ERC721 | Uint256-based + EIP-2612 implementation"
+│  │  └─ N-ERC721 - "Modern and gas efficient ERC721 | felt-based + EIP-2612 implementation"
 │  └─ ERC1155 — "Modern and gas efficient ERC1155 + EIP-165 implementation"
 ├─ utils
 │  ├─ Account — "Stripped account"
