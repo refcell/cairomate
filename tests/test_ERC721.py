@@ -23,8 +23,7 @@ async def ownable_factory():
         "contracts/tokens/ERC721/ERC721.cairo",
         constructor_calldata=[
             str_to_felt("Test Contract"),
-            str_to_felt("TEST"),
-            str_to_felt("BASE URI")
+            str_to_felt("TEST")
         ]
     )
     return starknet, erc721, owner
@@ -37,5 +36,3 @@ async def test_constructor(ownable_factory):
     assert expected_name.result.name == str_to_felt("Test Contract")
     expected_symbol = await erc721.symbol().call()
     assert expected_symbol.result.symbol == str_to_felt("TEST")
-    expected_base_uri = await erc721.baseURI().call()
-    assert expected_base_uri.result.base_uri == str_to_felt("BASE URI")
