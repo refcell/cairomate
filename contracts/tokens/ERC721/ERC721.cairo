@@ -31,6 +31,7 @@ end
 
 @storage_var
 func _total_supply() -> (total_supply: Uint256):
+end
 
 @storage_var
 func _owners(token_id: Uint256) -> (owner: felt):
@@ -302,7 +303,6 @@ func owner_of{
     let (owner) = _owners.read(token_id)
     return (owner)
 end
-
 
 @view
 func balance_of{
