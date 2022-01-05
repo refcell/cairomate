@@ -30,11 +30,11 @@ end
 #############################################
 
 @storage_var
-func _totalSupply() -> (totalSupply: Uint256):
+func _total_supply() -> (_total_supply: Uint256):
 end
 
 @storage_var
-func _owners(tokenId: Uint256) -> (owner: felt):
+func _owners(token_id: Uint256) -> (owner: felt):
 end
 
 @storage_var
@@ -42,11 +42,11 @@ func _balances(owner: felt) -> (balance: Uint256):
 end
 
 @storage_var
-func _tokenApprovals(tokenId: Uint256) -> (approved: felt):
+func _token_approvals(token_id: Uint256) -> (approved: felt):
 end
 
 @storage_var
-func _isApprovedForAll(owner: felt, spender: felt) -> (approved: felt):
+func _is_approved_for_all(owner: felt, spender: felt) -> (approved: felt):
 end
 
 #############################################
@@ -56,7 +56,7 @@ end
 ## TODO: EIP-2612
 
 # bytes32 public constant PERMIT_TYPEHASH =
-#     keccak256("Permit(address spender,uint256 tokenId,uint256 nonce,uint256 deadline)");
+#     keccak256("Permit(address spender,uint256 token_id,uint256 nonce,uint256 deadline)");
 # bytes32 public constant PERMIT_ALL_TYPEHASH =
 #     keccak256("Permit(address owner,address spender,uint256 nonce,uint256 deadline)");
 # uint256 internal immutable INITIAL_CHAIN_ID;
@@ -96,25 +96,25 @@ func approve{
     range_check_ptr
 }(
     spender: felt,
-    tokenId: Uint256
+    token_id: Uint256
 ):
     let (caller) = get_caller_address()
 
-    let (owner) = _owners.read(tokenId)
-    tempvar callerIsOwner = 0 #false by default
+    let (owner) = _owners.read(token_id)
+    tempvar caller_is_owner = 0 #false by default
     if caller == owner:
-        callerIsOwner = 1
+        caller_is_owner = 1
     end
-    let (approved) = _isApprovedForAll.read(owner, caller)
-    let (canApprove) = bitwise_or(callerIsOwner, approved)
-    assert canApprove = 1
+    let (approved) = _is_approved_for_all.read(owner, caller)
+    let (can_approve) = bitwise_or(caller_is_owner, approved)
+    assert can_approve = 1
 
-    _tokenApprovals.write(tokenId, spender)
+    _token_approvals.write(token_id, spender)
     return ()
 end
 
 @external
-func setApprovalForAll{
+func set_approval_for_all{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
@@ -123,7 +123,7 @@ func setApprovalForAll{
     approved: felt
 ):
     let (caller) = get_caller_address()
-    _isApprovedForAll.write(caller, operator, approved)
+    _is_approved_for_all.write(caller, operator, approved)
     return ()
 end
 
@@ -135,31 +135,31 @@ func transfer{
     range_check_ptr
 }(
     recipient: felt,
-    tokenId: Uint256
+    token_id: Uint256
 ):
     let (sender) = get_caller_address()
-    let (owner) = _owners.read(tokenId)
+    let (owner) = _owners.read(token_id)
     assert sender = owner
     assert_not_zero(recipient)
 
-    let (ownerBalance) = _balances.read(sender)
-    let (newOwnerBalance: Uint256) = uint256_sub(ownerBalance, Uint256(0,1))
+    let (owner_balance) = _balances.read(sender)
+    let (new_owner_balance: Uint256) = uint256_sub(owner_balance, Uint256(0,1))
 
-    let (recipientBalance) = _balances.read(recipient)
-    let (newRecipientBalance, _: Uint256) = uint256_add(recipientBalance, Uint256(0,1))
+    let (recipient_balance) = _balances.read(recipient)
+    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, Uint256(0,1))
 
-    _balances.write(sender, newOwnerBalance)
-    _balances.write(recipient, newRecipientBalance)
+    _balances.write(sender, new_owner_balance)
+    _balances.write(recipient, new_recipient_balance)
 
-    _owners.write(tokenId, recipient)
+    _owners.write(token_id, recipient)
 
-    _tokenApprovals.write(tokenId, 0)
+    _token_approvals.write(token_id, 0)
 
     return ()
 end
 
 @external
-func transferFrom{
+func transfer_from{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     bitwise_ptr : BitwiseBuiltin*,
@@ -167,41 +167,41 @@ func transferFrom{
 }(
     sender: felt,
     recipient: felt,
-    tokenId: Uint256
+    token_id: Uint256
 ):
     let (caller) = get_caller_address()
-    let (owner) = _owners.read(tokenId)
+    let (owner) = _owners.read(token_id)
 
     assert sender = owner # wrong sender
 
     assert_not_zero(recipient)
 
-    tempvar isCallerOwner = 0
+    tempvar is_caller_owner = 0
     if owner == caller:
-        isCallerOwner = 1
+        is_caller_owner = 1
     end
-    let (approvedSpender) = _tokenApprovals.read(tokenId)
-    tempvar isApproved = 0
-    if approvedSpender == caller:
-        isApproved = 1
+    let (approved_spender) = _token_approvals.read(token_id)
+    tempvar is_approved = 0
+    if approved_spender == caller:
+        is_approved = 1
     end
-    let (isApprovedForAll) = _isApprovedForAll.read(owner, caller)
-    let (canTransfer1) = bitwise_or(isCallerOwner, isApproved)
-    let (canTransfer) = bitwise_or(canTransfer1, isApprovedForAll)
-    assert canTransfer = 1
+    let (is_approved_for_all) = _is_approved_for_all.read(owner, caller)
+    let (can_transfer1) = bitwise_or(is_caller_owner, is_approved)
+    let (can_transfer) = bitwise_or(can_transfer1, is_approved_for_all)
+    assert can_transfer = 1
 
-    let (ownerBalance) = _balances.read(sender)
-    let (newOwnerBalance: Uint256) = uint256_sub(ownerBalance, Uint256(0,1))
+    let (owner_balance) = _balances.read(sender)
+    let (new_owner_balance: Uint256) = uint256_sub(owner_balance, Uint256(0,1))
 
-    let (recipientBalance) = _balances.read(recipient)
-    let (newRecipientBalance, _: Uint256) = uint256_add(recipientBalance, Uint256(0,1))
+    let (recipient_balance) = _balances.read(recipient)
+    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, Uint256(0,1))
 
-    _balances.write(sender, newOwnerBalance)
-    _balances.write(recipient, newRecipientBalance)
+    _balances.write(sender, new_owner_balance)
+    _balances.write(recipient, new_recipient_balance)
 
-    _owners.write(tokenId, recipient)
+    _owners.write(token_id, recipient)
 
-    _tokenApprovals.write(tokenId, 0)
+    _token_approvals.write(token_id, 0)
 
     return ()
 end
@@ -216,21 +216,21 @@ func _mint{
     range_check_ptr
 }(
     recipient: felt,
-    tokenId: Uint256
+    token_id: Uint256
 ):
     assert_not_zero(recipient) #invalid recipient
-    let (tokenOwner) = _owners.read(tokenId)
-    assert tokenOwner = 0 #already minted
+    let (token_owner) = _owners.read(token_id)
+    assert token_owner = 0 #already minted
 
-    let (currentBalance) = _balances.read(owner=recipient)
-    let (newBalance, _: Uint256) = uint256_add(currentBalance, Uint256(0,1))
-    _balances.write(recipient, newBalance)
+    let (current_balance) = _balances.read(owner=recipient)
+    let (new_balance, _: Uint256) = uint256_add(current_balance, Uint256(0,1))
+    _balances.write(recipient, new_balance)
 
-    let (currentSupply) = _totalSupply.read()
-    let (newSupply, _: Uint256) = uint256_add(currentSupply, Uint256(0,1))
-    _totalSupply.write(newSupply)
+    let (current_supply) = _total_supply.read()
+    let (new_supply, _: Uint256) = uint256_add(current_supply, Uint256(0,1))
+    _total_supply.write(new_supply)
 
-    _owners.write(tokenId, recipient)
+    _owners.write(token_id, recipient)
 
     return ()
 end
@@ -240,21 +240,21 @@ func _burn{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }(
-    tokenId: Uint256
+    token_id: Uint256
 ):
-    let (owner) = _owners.read(tokenId)
+    let (owner) = _owners.read(token_id)
     assert_not_zero(owner) #not minted
 
-    let (currentBalance) = _balances.read(owner)
-    let (newBalance: Uint256) = uint256_sub(currentBalance, Uint256(0,1))
-    _balances.write(owner, newBalance)
+    let (current_balance) = _balances.read(owner)
+    let (new_balance: Uint256) = uint256_sub(current_balance, Uint256(0,1))
+    _balances.write(owner, new_balance)
 
-    let (currentSupply) = _totalSupply.read()
-    let (newSupply: Uint256) = uint256_sub(currentSupply, Uint256(0,1))
-    _totalSupply.write(newSupply)
+    let (current_supply) = _total_supply.read()
+    let (new_supply: Uint256) = uint256_sub(current_supply, Uint256(0,1))
+    _total_supply.write(new_supply)
 
-    _owners.write(tokenId, 0)
-    _tokenApprovals.write(tokenId, 0)
+    _owners.write(token_id, 0)
+    _token_approvals.write(token_id, 0)
 
     return ()
 end
@@ -284,28 +284,28 @@ func symbol{
 end
 
 @view
-func totalSupply{
+func total_supply{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}() -> (totalSupply: Uint256):
-    let (totalSupply: Uint256) = _totalSupply.read()
-    return (totalSupply)
+}() -> (total_supply: Uint256):
+    let (total_supply: Uint256) = _total_supply.read()
+    return (total_supply)
 end
 
 @view
-func ownerOf{
+func owner_of{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}(tokenId: Uint256) -> (owner: felt):
-    let (owner) = _owners.read(tokenId)
+}(token_id: Uint256) -> (owner: felt):
+    let (owner) = _owners.read(token_id)
     return (owner)
 end
 
 
 @view
-func balanceOf{
+func balance_of{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
@@ -315,21 +315,21 @@ func balanceOf{
 end
 
 @view
-func getApproved{
+func get_approved{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
-}(tokenId: Uint256) -> (spender: felt):
-    let (spender) = _tokenApprovals.read(tokenId)
+}(token_id: Uint256) -> (spender: felt):
+    let (spender) = _token_approvals.read(token_id)
     return (spender)
 end
 
 @view
-func isApprovedForAll{
+func is_approved_for_all{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
 }(owner: felt, operator: felt) -> (approved: felt):
-    let (approved) = _isApprovedForAll.read(owner, operator)
+    let (approved) = _is_approved_for_all.read(owner, operator)
     return (approved)
 end
