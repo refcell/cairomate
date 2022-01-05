@@ -182,8 +182,8 @@ func increase_allowance{
 
     assert_not_zero(caller)
     assert_not_zero(spender)
-    uint256_check(amount)
-    _allowances.write(caller, spender, amount)
+    uint256_check(new_allowance)
+    _allowances.write(caller, spender, new_allowance)
 
     return (1) # Starknet's `true`
 end
@@ -209,8 +209,8 @@ func decrease_allowance{
 
     assert_not_zero(caller)
     assert_not_zero(spender)
-    uint256_check(amount)
-    _allowances.write(caller, spender, amount)
+    uint256_check(new_allowance)
+    _allowances.write(caller, spender, new_allowance)
 
     return (1) # Starknet's `true`
 end
