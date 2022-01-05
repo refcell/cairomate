@@ -44,10 +44,11 @@ async def test_constructor(ownable_factory):
 async def test_approve_from_caller(ownable_factory):
     _, erc20, owner = ownable_factory
     user = 123
+    amount = uint(1000)
     # First mint the owner tokens
-    await signer.send_transaction(owner, erc20.contract_address, 'mint', [owner, *uint(1000)])
+    await signer.send_transaction(owner, erc20.contract_address, 'mint', [owner, amount])
     # Approve the user to spend the tokens
-    await signer.send_transaction(owner, erc20.contract_address, 'approve', [user, *uint(1000)])
+    await signer.send_transaction(owner, erc20.contract_address, 'approve', [user, amount])
     # Check if the user is approved
     executed_info = await erc20.allowance(owner, user).call()
-    assert executed_info.result.allowance == *uint(1000)
+    assert executed_info.result.allowance == amount
