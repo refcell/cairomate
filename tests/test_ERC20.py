@@ -20,10 +20,10 @@ async def ownable_factory():
     erc20 = await starknet.deploy(
         "contracts/tokens/ERC20.cairo",
         constructor_calldata=[
-          str_to_felt("Test Contract"),
-          str_to_felt("TEST"),
-          18,
-          *uint(1000)
+            str_to_felt("Test Contract"),
+            str_to_felt("TEST"),
+            18,
+            *uint(1000)
         ]
     )
     return starknet, erc20, owner
