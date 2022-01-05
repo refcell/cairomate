@@ -39,3 +39,11 @@ async def test_constructor(ownable_factory):
     assert expected_decimals.result.decimals == 18
     expected_total_supply = await erc20.total_supply().call()
     assert expected_total_supply.result.total_supply == uint(1000)
+
+@pytest.mark.asyncio
+async def test_approve_from_caller(ownable_factory):
+    _, erc20, owner = ownable_factory
+    spender = 123
+    await signer.send_transaction(owner, ownable.contract_address, 'transfer_ownership', [new_owner])
+    executed_info = await ownable.get_owner().call()
+    assert executed_info.result == (new_owner,)
