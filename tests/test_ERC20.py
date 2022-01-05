@@ -43,7 +43,11 @@ async def test_constructor(ownable_factory):
 @pytest.mark.asyncio
 async def test_approve_from_caller(ownable_factory):
     _, erc20, owner = ownable_factory
-    spender = 123
-    await signer.send_transaction(owner, ownable.contract_address, 'transfer_ownership', [new_owner])
-    executed_info = await ownable.get_owner().call()
-    assert executed_info.result == (new_owner,)
+    user = 123
+    # First mint the owner tokens
+    await signer.send_transaction(owner, erc20.contract_address, 'mint', [owner, *uint(1000)])
+    # Approve the user to spend the tokens
+    await signer.send_transaction(owner, erc20.contract_address, 'approve', [user, *uint(1000)])
+    # Check if the user is approved
+    executed_info = await erc20.allowance(owner, user).call()
+    assert executed_info.result.allowance == *uint(1000)
