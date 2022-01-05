@@ -246,6 +246,7 @@ func _burn{
 
     return ()
 end
+
 #############################################
 ##                ACCESSORS                ##
 #############################################
@@ -281,7 +282,7 @@ func total_supply{
 end
 
 @view
-func owne_of{
+func owner_of{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
     range_check_ptr
