@@ -16,7 +16,7 @@ def str_to_felt(text):
 
 
 def uint(a):
-    return(a, 0)
+    return(0, a)
 
 
 async def assert_revert(fun):
