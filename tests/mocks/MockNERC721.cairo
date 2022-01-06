@@ -204,6 +204,35 @@ func transfer_from{
     return ()
 end
 
+
+@external
+func mint{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    recipient: felt,
+    token_id: felt
+):
+    _mint(recipient, token_id)
+    return ()
+end
+
+@external
+func burn{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    token_id: felt
+):
+    _burn(token_id)
+    return ()
+end
+
+
 #############################################
 ##             INTERNAL LOGIC              ##
 #############################################
