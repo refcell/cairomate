@@ -51,6 +51,7 @@ async def test_mint():
     expected_owner = await erc721.owner_of(token).call()
     assert expected_owner.result.owner == owner.contract_address
     expected_balance = await erc721.balance_of(owner.contract_address).call()
+    print (expected_balance.result.balance)
     assert expected_balance.result.balance == uint(1)
 
 @pytest.mark.asyncio

@@ -144,10 +144,10 @@ func transfer{
     assert_not_zero(recipient)
 
     let (owner_balance) = _balances.read(sender)
-    let (new_owner_balance: Uint256) = uint256_sub(owner_balance, Uint256(0,1))
+    let (new_owner_balance: Uint256) = uint256_sub(owner_balance, Uint256(1,0))
 
     let (recipient_balance) = _balances.read(recipient)
-    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, Uint256(0,1))
+    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, Uint256(1,0))
 
     _balances.write(sender, new_owner_balance)
     _balances.write(recipient, new_recipient_balance)
@@ -197,10 +197,10 @@ func transfer_from{
     assert can_transfer = 1
 
     let (owner_balance) = _balances.read(sender)
-    let (new_owner_balance: Uint256) = uint256_sub(owner_balance, Uint256(0,1))
+    let (new_owner_balance: Uint256) = uint256_sub(owner_balance, Uint256(1,0))
 
     let (recipient_balance) = _balances.read(recipient)
-    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, Uint256(0,1))
+    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, Uint256(1,0))
 
     _balances.write(sender, new_owner_balance)
     _balances.write(recipient, new_recipient_balance)
@@ -238,7 +238,6 @@ func burn{
     _burn(token_id)
     return ()
 end
-
 #############################################
 ##             INTERNAL LOGIC              ##
 #############################################
@@ -256,11 +255,11 @@ func _mint{
     assert token_owner = 0 #already minted
 
     let (current_balance) = _balances.read(owner=recipient)
-    let (new_balance, _: Uint256) = uint256_add(current_balance, Uint256(0,1))
+    let (new_balance, _: Uint256) = uint256_add(current_balance, Uint256(1,0))
     _balances.write(recipient, new_balance)
 
     let (current_supply) = _total_supply.read()
-    let (new_supply, _: Uint256) = uint256_add(current_supply, Uint256(0,1))
+    let (new_supply, _: Uint256) = uint256_add(current_supply, Uint256(1,0))
     _total_supply.write(new_supply)
 
     _owners.write(token_id, recipient)
@@ -279,11 +278,11 @@ func _burn{
     assert_not_zero(owner) #not minted
 
     let (current_balance) = _balances.read(owner)
-    let (new_balance: Uint256) = uint256_sub(current_balance, Uint256(0,1))
+    let (new_balance: Uint256) = uint256_sub(current_balance, Uint256(1,0))
     _balances.write(owner, new_balance)
 
     let (current_supply) = _total_supply.read()
-    let (new_supply: Uint256) = uint256_sub(current_supply, Uint256(0,1))
+    let (new_supply: Uint256) = uint256_sub(current_supply, Uint256(1,0))
     _total_supply.write(new_supply)
 
     _owners.write(token_id, 0)
