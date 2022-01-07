@@ -2,6 +2,7 @@ import pytest
 import asyncio
 from starkware.starknet.testing.starknet import Starknet
 from utils import Signer, uint, str_to_felt
+from random import randint
 
 owner_signer = Signer(123456789987654321)
 friend_signer = Signer(69420)
@@ -46,7 +47,7 @@ async def test_constructor():
 @pytest.mark.asyncio
 async def test_mint():
     _, erc721, owner, _ = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     expected_owner = await erc721.owner_of(token).call()
     assert expected_owner.result.owner == owner.contract_address
@@ -57,7 +58,7 @@ async def test_mint():
 @pytest.mark.asyncio
 async def test_burn():
     _, erc721, owner, _ = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     await owner_signer.send_transaction(owner, erc721.contract_address, 'burn', [*token])
     expected_owner = await erc721.owner_of(token).call()
@@ -68,7 +69,7 @@ async def test_burn():
 @pytest.mark.asyncio
 async def test_approve():
     _, erc721, owner, friend = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     await owner_signer.send_transaction(owner, erc721.contract_address, 'approve', [friend.contract_address, *token])
     expected_spender = await erc721.get_approved(token).call()
@@ -77,7 +78,7 @@ async def test_approve():
 @pytest.mark.asyncio
 async def test_approve_burn():
     _, erc721, owner, friend = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     await owner_signer.send_transaction(owner, erc721.contract_address, 'approve', [friend.contract_address, *token])
     await owner_signer.send_transaction(owner, erc721.contract_address, 'burn', [*token])
@@ -94,7 +95,7 @@ async def test_approve_all():
 @pytest.mark.asyncio
 async def test_transfer_from():
     _, erc721, owner, friend = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     await owner_signer.send_transaction(owner, erc721.contract_address, 'approve', [friend.contract_address, *token])
     await friend_signer.send_transaction(friend, erc721.contract_address, 'transfer_from', [owner.contract_address, 666, *token])
@@ -111,7 +112,7 @@ async def test_transfer_from():
 @pytest.mark.asyncio
 async def test_transfer_from_self():
     _, erc721, owner, _ = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     await owner_signer.send_transaction(owner, erc721.contract_address, 'transfer_from', [owner.contract_address, 666, *token])
 
@@ -127,7 +128,7 @@ async def test_transfer_from_self():
 @pytest.mark.asyncio
 async def test_transfer_from_approve_all():
     _, erc721, owner, friend = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     await owner_signer.send_transaction(owner, erc721.contract_address, 'set_approval_for_all', [friend.contract_address, 1])
     await friend_signer.send_transaction(friend, erc721.contract_address, 'transfer_from', [owner.contract_address, 666, *token])
@@ -144,14 +145,14 @@ async def test_transfer_from_approve_all():
 @pytest.mark.asyncio
 async def test_fail_mint_to_zero():
     _, erc721, owner, _ = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     with pytest.raises(Exception):
         await erc721.mint(0, token).invoke()
 
 @pytest.mark.asyncio
 async def test_fail_double_mint():
     _, erc721, owner, _ = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     with pytest.raises(Exception):
         await erc721.mint(owner.contract_address, token).invoke()
@@ -159,14 +160,14 @@ async def test_fail_double_mint():
 @pytest.mark.asyncio
 async def test_fail_burn_unminted():
     _, erc721, owner, _ = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     with pytest.raises(Exception):
         await owner_signer.send_transaction(owner, erc721.contract_address, 'burn', [*token])
 
 @pytest.mark.asyncio
 async def test_fail_double_burn():
     _, erc721, owner, _ = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     await owner_signer.send_transaction(owner, erc721.contract_address, 'burn', [*token])
     with pytest.raises(Exception):
@@ -175,14 +176,14 @@ async def test_fail_double_burn():
 @pytest.mark.asyncio
 async def test_fail_approve_unminted():
     _, erc721, owner, friend = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     with pytest.raises(Exception):
         await owner_signer.send_transaction(owner, erc721.contract_address, 'approve', [friend.contract_address, *token])
 
 @pytest.mark.asyncio
 async def test_fail_approve_unauthorized():
     _, erc721, owner, friend = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     with pytest.raises(Exception):
         await friend_signer.send_transaction(friend, erc721.contract_address, 'approve', [666, *token])
@@ -190,14 +191,14 @@ async def test_fail_approve_unauthorized():
 @pytest.mark.asyncio
 async def test_fail_transfer_from_unowned():
     _, erc721, owner, friend = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     with pytest.raises(Exception):
         await owner_signer.send_transaction(owner, erc721.contract_address, 'transfer_from', [69, 420, *token])
 
 @pytest.mark.asyncio
 async def test_fail_transfer_from_wrong_from():
     _, erc721, owner, friend = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     with pytest.raises(Exception):
         await friend_signer.send_transaction(friend, erc721.contract_address, 'transfer_from', [69, 420, *token])
@@ -205,7 +206,7 @@ async def test_fail_transfer_from_wrong_from():
 @pytest.mark.asyncio
 async def test_fail_transfer_from_to_zero():
     _, erc721, owner, friend = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     with pytest.raises(Exception):
         await owner_signer.send_transaction(owner, erc721.contract_address, 'transfer_from', [owner.contract_address, 0, *token])
@@ -213,7 +214,7 @@ async def test_fail_transfer_from_to_zero():
 @pytest.mark.asyncio
 async def test_fail_transfer_from_not_owner():
     _, erc721, owner, friend = await ownable_factory()
-    token = uint(0)
+    token = uint(randint(0, 2**64))
     await erc721.mint(owner.contract_address, token).invoke()
     with pytest.raises(Exception):
         await friend_signer.send_transaction(friend, erc721.contract_address, 'transfer_from', [owner.contract_address, 666, *token])
