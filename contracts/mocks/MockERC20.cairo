@@ -60,6 +60,15 @@ func mint{
     return ()
 end
 
+@view
+func owner{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}() -> (owner: felt):
+    let (owner: felt) = _owner.read()
+    return (owner)
+end
 
 # ERC20 Implementation Below
 #############################################
@@ -214,7 +223,6 @@ func decrease_allowance{
 
     return (1) # Starknet's `true`
 end
-
 
 @external
 func transfer{

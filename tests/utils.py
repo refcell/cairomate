@@ -22,6 +22,13 @@ def uint(a):
 def uint_add(a, b):
     return(a[0] + b[0], a[1] + b[1])
 
+async def assert_invoked_revert(fun, caller):
+    try:
+        await fun.invoke(caller_address=caller)
+        assert False
+    except StarkException as err:
+        _, error = err.args
+        assert error['code'] == StarknetErrorCode.TRANSACTION_FAILED
 
 async def assert_revert(fun):
     try:

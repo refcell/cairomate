@@ -100,6 +100,17 @@ nile compile
 pytest
 ```
 
+Running a specific test file (eg `tests/test_ERC20.py`):
+```bash
+pytest tests/test_ERC20.py
+```
+
+Test a specific test case:
+```bash
+pytest tests/test_ERC20.py -k 'test_mint'
+```
+
+
 ### Extending Cairo contracts
 
 There's no clear contract extensibility pattern for Cairo smart contracts yet. In the meantime the best way to extend our contracts is copypasting and modifying them at your own risk. Remember this contracts are still under development and they have not gone through any audit or security review whatsoever.
