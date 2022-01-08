@@ -6,7 +6,21 @@ from starkware.starknet.common.syscalls import get_caller_address
 from starkware.cairo.common.math import assert_not_zero
 from starkware.cairo.common.bitwise import bitwise_or
 from starkware.cairo.common.uint256 import Uint256, uint256_sub, uint256_add
+from starkware.cairo.common.alloc import alloc
 
+const ERC721_TOKEN_RECEIVER_SELECTOR = 0x150b7a02
+
+@contract_interface
+namespace ERC721_TOKEN_RECEIVER:
+    func on_erc721_received(
+        operator: felt,
+        to: felt,
+        token_id: Uint256,
+        data_len: felt,
+        data: felt*
+    ) -> (selector: felt):
+    end
+end
 ## @title ERC721
 ## @description A minimalistic implementation of ERC721 Token Standard.
 ## @dev Uses the common uint256 type for compatibility with the base evm.
@@ -212,6 +226,58 @@ func transfer_from{
     return ()
 end
 
+func safe_transfer_from{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    sender: felt,
+    recipient: felt,
+    token_id: Uint256
+):
+    alloc_locals
+    let (caller) = get_caller_address()
+    transfer_from(sender, recipient, token_id)
+    let (local empty_array: felt*) = alloc()
+    let (selector) = ERC721_TOKEN_RECEIVER.on_erc721_received(
+        contract_address=recipient,
+        operator=caller,
+        to=sender,
+        token_id=token_id,
+        data_len=0,
+        data=empty_array)
+    assert selector = ERC721_TOKEN_RECEIVER_SELECTOR
+    return ()
+end
+
+# WARNING! Breaks with EIP-721 because OVERLOADING is NOT supported in starknet!
+func safe_transfer_from_with_data{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    sender: felt,
+    recipient: felt,
+    token_id: Uint256,
+    data_len: felt,
+    data: felt*
+):
+    alloc_locals
+    let (caller) = get_caller_address()
+    transfer_from(sender, recipient, token_id)
+    let (selector) = ERC721_TOKEN_RECEIVER.on_erc721_received(
+        contract_address=recipient,
+        operator=caller,
+        to=sender,
+        token_id=token_id,
+        data_len=data_len,
+        data=data)
+    assert selector = ERC721_TOKEN_RECEIVER_SELECTOR
+    return ()
+end
+
 @external
 func mint{
     syscall_ptr: felt*,
@@ -223,6 +289,36 @@ func mint{
     token_id: Uint256
 ):
     _mint(recipient, token_id)
+    return ()
+end
+
+@external
+func safe_mint{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    recipient: felt,
+    token_id: Uint256
+):
+    _safe_mint(recipient, token_id)
+    return ()
+end
+
+@external
+func safe_mint_with_data{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    recipient: felt,
+    token_id: Uint256,
+    data_len: felt,
+    data: felt*
+):
+    _safe_mint_with_data(recipient, token_id, data_len, data)
     return ()
 end
 
@@ -264,6 +360,56 @@ func _mint{
 
     _owners.write(token_id, recipient)
 
+    return ()
+end
+
+func _safe_mint{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    recipient: felt,
+    token_id: Uint256
+):
+    alloc_locals
+    let (caller) = get_caller_address()
+    _mint(recipient, token_id)
+    let (local empty_array: felt*) = alloc()
+    let (selector) = ERC721_TOKEN_RECEIVER.on_erc721_received(
+        contract_address=recipient,
+        operator=caller,
+        to=0,
+        token_id=token_id,
+        data_len=0,
+        data=empty_array)
+    assert selector = ERC721_TOKEN_RECEIVER_SELECTOR
+    return ()
+end
+
+func _safe_mint_with_data{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    recipient: felt,
+    token_id: Uint256,
+    data_len: felt,
+    data: felt*
+):
+    alloc_locals
+    let (caller) = get_caller_address()
+    _mint(recipient, token_id)
+    let (local empty_array: felt*) = alloc()
+    let (selector) = ERC721_TOKEN_RECEIVER.on_erc721_received(
+        contract_address=recipient,
+        operator=caller,
+        to=0,
+        token_id=token_id,
+        data_len=data_len,
+        data=data)
+    assert selector = ERC721_TOKEN_RECEIVER_SELECTOR
     return ()
 end
 

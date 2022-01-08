@@ -6,6 +6,27 @@ from starkware.starknet.common.syscalls import get_caller_address
 from starkware.cairo.common.math import assert_not_zero
 from starkware.cairo.common.bitwise import bitwise_or
 from starkware.cairo.common.uint256 import Uint256, uint256_sub, uint256_add
+from starkware.cairo.common.alloc import alloc
+
+const ERC721_TOKEN_RECEIVER_SELECTOR = 0x150b7a02
+
+@contract_interface
+namespace ERC721TokenReceiver:
+    func on_erc721_received(
+        operator: felt,
+        to: felt,
+        token_id: Uint256,
+        data_len: felt,
+        data: felt*
+    ) -> (selector: felt):
+    end
+end
+
+@contract_interface
+namespace Account:
+    func get_public_key() -> (res: felt):
+    end
+end
 
 ## @title ERC721
 ## @description A minimalistic implementation of ERC721 Token Standard.
@@ -101,10 +122,9 @@ func approve{
     let (caller) = get_caller_address()
 
     let (owner) = _owners.read(token_id)
+    tempvar caller_is_owner = 0 #false by default
     if caller == owner:
-        tempvar caller_is_owner = 1
-    else:
-        tempvar caller_is_owner = 0
+        caller_is_owner = 1
     end
     let (approved) = _is_approved_for_all.read(owner, caller)
     let (can_approve) = bitwise_or(caller_is_owner, approved)
@@ -144,10 +164,10 @@ func transfer{
     assert_not_zero(recipient)
 
     let (owner_balance) = _balances.read(sender)
-    let (new_owner_balance: Uint256) = uint256_sub(owner_balance, Uint256(1,0))
+    let (new_owner_balance: Uint256) = uint256_sub(owner_balance, Uint256(0,1))
 
     let (recipient_balance) = _balances.read(recipient)
-    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, Uint256(1,0))
+    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, Uint256(0,1))
 
     _balances.write(sender, new_owner_balance)
     _balances.write(recipient, new_recipient_balance)
@@ -177,30 +197,25 @@ func transfer_from{
 
     assert_not_zero(recipient)
 
-    if caller == owner:
-        tempvar caller_is_owner = 1
-    else:
-        tempvar caller_is_owner = 0
+    tempvar is_caller_owner = 0
+    if owner == caller:
+        is_caller_owner = 1
     end
-
     let (approved_spender) = _token_approvals.read(token_id)
-    
+    tempvar is_approved = 0
     if approved_spender == caller:
-        tempvar is_approved = 1
-    else:
-        tempvar is_approved = 0
+        is_approved = 1
     end
-
     let (is_approved_for_all) = _is_approved_for_all.read(owner, caller)
-    let (can_transfer1) = bitwise_or(caller_is_owner, is_approved)
+    let (can_transfer1) = bitwise_or(is_caller_owner, is_approved)
     let (can_transfer) = bitwise_or(can_transfer1, is_approved_for_all)
     assert can_transfer = 1
 
     let (owner_balance) = _balances.read(sender)
-    let (new_owner_balance: Uint256) = uint256_sub(owner_balance, Uint256(1,0))
+    let (new_owner_balance: Uint256) = uint256_sub(owner_balance, Uint256(0,1))
 
     let (recipient_balance) = _balances.read(recipient)
-    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, Uint256(1,0))
+    let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, Uint256(0,1))
 
     _balances.write(sender, new_owner_balance)
     _balances.write(recipient, new_recipient_balance)
@@ -209,6 +224,58 @@ func transfer_from{
 
     _token_approvals.write(token_id, 0)
 
+    return ()
+end
+
+func safe_transfer_from{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    sender: felt,
+    recipient: felt,
+    token_id: Uint256
+):
+    alloc_locals
+    transfer_from(sender, recipient, token_id)
+    let (caller) = get_caller_address()
+    let (local empty_array: felt*) = alloc()
+    let (selector) = ERC721TokenReceiver.on_erc721_received(
+        contract_address=recipient,
+        operator=caller,
+        to=sender,
+        token_id=token_id,
+        data_len=0,
+        data=empty_array)
+    assert selector = ERC721_TOKEN_RECEIVER_SELECTOR
+    return ()
+end
+
+# WARNING! Breaks with EIP-721 because OVERLOADING is NOT supported in starknet!
+func safe_transfer_from_with_data{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    sender: felt,
+    recipient: felt,
+    token_id: Uint256,
+    data_len: felt,
+    data: felt*
+):
+    alloc_locals
+    transfer_from(sender, recipient, token_id)
+    let (caller) = get_caller_address()
+    let (selector) = ERC721TokenReceiver.on_erc721_received(
+        contract_address=recipient,
+        operator=caller,
+        to=sender,
+        token_id=token_id,
+        data_len=data_len,
+        data=data)
+    assert selector = ERC721_TOKEN_RECEIVER_SELECTOR
     return ()
 end
 
@@ -229,15 +296,65 @@ func _mint{
     assert token_owner = 0 #already minted
 
     let (current_balance) = _balances.read(owner=recipient)
-    let (new_balance, _: Uint256) = uint256_add(current_balance, Uint256(1,0))
+    let (new_balance, _: Uint256) = uint256_add(current_balance, Uint256(0,1))
     _balances.write(recipient, new_balance)
 
     let (current_supply) = _total_supply.read()
-    let (new_supply, _: Uint256) = uint256_add(current_supply, Uint256(1,0))
+    let (new_supply, _: Uint256) = uint256_add(current_supply, Uint256(0,1))
     _total_supply.write(new_supply)
 
     _owners.write(token_id, recipient)
 
+    return ()
+end
+
+func _safe_mint{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    recipient: felt,
+    token_id: Uint256
+):
+    alloc_locals
+    _mint(recipient, token_id)
+    let (caller) = get_caller_address()
+    let (local empty_array: felt*) = alloc()
+    let (selector) = ERC721TokenReceiver.on_erc721_received(
+        contract_address=recipient,
+        operator=caller,
+        to=0,
+        token_id=token_id,
+        data_len=0,
+        data=empty_array)
+    assert selector = ERC721_TOKEN_RECEIVER_SELECTOR
+    return ()
+end
+
+# WARNING! Breaks with EIP-721 because OVERLOADING is NOT supported in starknet!
+func _safe_mint_with_data{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    recipient: felt,
+    token_id: Uint256,
+    data_len: felt,
+    data: felt*
+):
+    alloc_locals
+    _mint(recipient, token_id)
+    let (caller) = get_caller_address()
+    let (selector) = ERC721TokenReceiver.on_erc721_received(
+        contract_address=recipient,
+        operator=caller,
+        to=0,
+        token_id=token_id,
+        data_len=data_len,
+        data=data)
+    assert selector = ERC721_TOKEN_RECEIVER_SELECTOR
     return ()
 end
 
@@ -252,11 +369,11 @@ func _burn{
     assert_not_zero(owner) #not minted
 
     let (current_balance) = _balances.read(owner)
-    let (new_balance: Uint256) = uint256_sub(current_balance, Uint256(1,0))
+    let (new_balance: Uint256) = uint256_sub(current_balance, Uint256(0,1))
     _balances.write(owner, new_balance)
 
     let (current_supply) = _total_supply.read()
-    let (new_supply: Uint256) = uint256_sub(current_supply, Uint256(1,0))
+    let (new_supply: Uint256) = uint256_sub(current_supply, Uint256(0,1))
     _total_supply.write(new_supply)
 
     _owners.write(token_id, 0)

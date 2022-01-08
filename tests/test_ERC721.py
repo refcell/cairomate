@@ -32,6 +32,7 @@ async def ownable_factory():
             str_to_felt("TEST")
         ]
     )
+
     return starknet, erc721, owner, friend
 
 
@@ -132,6 +133,25 @@ async def test_transfer_from_approve_all():
     await erc721.mint(owner.contract_address, token).invoke()
     await owner_signer.send_transaction(owner, erc721.contract_address, 'set_approval_for_all', [friend.contract_address, 1])
     await friend_signer.send_transaction(friend, erc721.contract_address, 'transfer_from', [owner.contract_address, 666, *token])
+
+    expected_approval = await erc721.get_approved(token).call()
+    assert expected_approval.result.spender == 0
+    expected_owner = await erc721.owner_of(token).call()
+    assert expected_owner.result.owner == 666
+    expected_balance_from = await erc721.balance_of(owner.contract_address).call()
+    assert expected_balance_from.result.balance == uint(0)
+    expected_balance_to = await erc721.balance_of(666).call()
+    assert expected_balance_to.result.balance == uint(1)
+
+
+@pytest.mark.asyncio
+async def test_safe_transfer_from():
+    _, erc721, owner, friend = await ownable_factory()
+    empty_array = []
+    token = uint(randint(0, 2**64))
+    await erc721.mint(owner.contract_address, token).invoke()
+    await owner_signer.send_transaction(owner, erc721.contract_address, 'approve', [friend.contract_address, *token])
+    await friend_signer.send_transaction(friend, erc721.contract_address, 'safe_transfer_from', [owner.contract_address, 666, *token, 0, *empty_array])
 
     expected_approval = await erc721.get_approved(token).call()
     assert expected_approval.result.spender == 0
