@@ -60,18 +60,6 @@ func _allowances(owner: felt, spender: felt) -> (allowance: Uint256):
 end
 
 #############################################
-##             EIP 2612 STORE              ##
-#############################################
-
-## TODO: EIP-2612
-
-#     bytes32 public constant PERMIT_TYPEHASH =
-#         keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
-#     uint256 internal immutable INITIAL_CHAIN_ID;
-#     bytes32 internal immutable INITIAL_DOMAIN_SEPARATOR;
-#     mapping(address => uint256) public nonces;
-
-#############################################
 ##               CONSTRUCTOR               ##
 #############################################
 
@@ -117,7 +105,7 @@ func approve{
     ## EFFECTS ##
     _allowances.write(caller, spender, amount)
 
-    # Emit the approval event ##
+    ## Emit the approval event ##
     approval.emit(owner=caller, spender=spender, amount=amount)
 
     return (1) # Starknet's `true`
