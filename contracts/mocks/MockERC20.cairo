@@ -12,7 +12,7 @@ from starkware.cairo.common.uint256 import (
 
 ## @title Mock ERC20
 ## @description Practical implementation of an ERC20 token.
-## @author velleity <github.com/a5f9t4>
+## @author andreas <andreas@nascent.xyz>
 
 
 #############################################

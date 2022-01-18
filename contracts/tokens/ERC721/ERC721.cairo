@@ -11,7 +11,7 @@ from starkware.cairo.common.uint256 import Uint256, uint256_sub, uint256_add
 ## @description A minimalistic implementation of ERC721 Token Standard.
 ## @dev Uses the common uint256 type for compatibility with the base evm.
 ## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
-## @author velleity <github.com/a5f9t4> exp.table <github.com/exp-table>
+## @author andreas <andreas@nascent.xyz> exp.table <github.com/exp-table>
 
 #############################################
 ##                METADATA                 ##

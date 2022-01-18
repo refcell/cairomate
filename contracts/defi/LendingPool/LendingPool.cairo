@@ -17,7 +17,7 @@ from contracts.defi.LendingPool.LendingPoolCore import (getReserveATokenAddress,
 ## @title Lending Pool
 ## @description A simple lending pool contract.
 ## @description Adapted from Aave's Lending Pool https://github.com/aave/aave-protocol
-## @author velleity <github.com/a5f9t4>
+## @author andreas <andreas@nascent.xyz>
 
 #############################################
 ##               MODIFIERS                 ##

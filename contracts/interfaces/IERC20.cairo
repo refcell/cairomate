@@ -5,7 +5,7 @@ from starkware.cairo.common.uint256 import Uint256
 ## @title ERC20 Interface
 ## @description An interface for the ERC20 standard.
 ## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
-## @author velleity <github.com/a5f9t4>
+## @author andreas <andreas@nascent.xyz>
 
 @contract_interface
 namespace IERC20:

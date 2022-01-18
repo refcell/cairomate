@@ -17,7 +17,7 @@ from contracts.interfaces.IERC20 import IERC20
 ## @title Staking Rewards
 ## @description A stripped down implementation of Synthetix StakingRewards.sol
 ## @description Adapted from https://solidity-by-example.org/defi/staking-rewards/
-## @author velleity <github.com/a5f9t4>
+## @author andreas <andreas@nascent.xyz>
 
 #############################################
 ##                 STORAGE                 ##

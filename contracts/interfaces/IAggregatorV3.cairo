@@ -5,7 +5,7 @@ from starkware.cairo.common.uint256 import Uint256
 ## @title AggregatorV3 Interface
 ## @description An interface for Chainlink V3 aggregator.
 ## @description Adapted from https://solidity-by-example.org/defi/chainlink-price-oracle/
-## @author velleity <github.com/a5f9t4>
+## @author andreas <andreas@nascent.xyz>
 
 @contract_interface
 namespace IAggregatorV3:

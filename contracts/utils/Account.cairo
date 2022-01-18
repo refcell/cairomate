@@ -12,7 +12,7 @@ from starkware.cairo.common.hash_state import (
 
 ## @title Account
 ## @description A stripped down Account adapted from OpenZeppelin's [Account.cairo](https://github.com/OpenZeppelin/cairo-contracts/blob/main/contracts/Account.cairo).
-## @author velleity <github.com/a5f9t4>
+## @author andreas <andreas@nascent.xyz>
 
 #############################################
 ##                 STORAGE                 ##

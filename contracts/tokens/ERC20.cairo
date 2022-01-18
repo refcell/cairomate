@@ -13,7 +13,7 @@ from starkware.cairo.common.uint256 import (
 ## @title ERC20
 ## @description A minimalistic implementation of ERC20 Token Standard.
 ## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
-## @author velleity <github.com/a5f9t4>
+## @author andreas <andreas@nascent.xyz>
 
 #############################################
 ##                METADATA                 ##
