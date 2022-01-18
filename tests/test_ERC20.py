@@ -133,7 +133,7 @@ async def test_increase_allowance():
     assert executed_info.result.allowance == uint(0)
 
 @pytest.mark.asyncio
-async def test_increase_allowance_overflow():
+async def test_fail_increase_allowance_overflow():
     _, erc20, owner, friend = await erc20_factory()
     amount = MAX_UINT256
     # overflow_amount adds (1, 0) to (2**128 - 1, 2**128 - 1)
@@ -174,14 +174,14 @@ async def test_decrease_allowance():
     assert executed_info.result.allowance == uint(0)
 
 @pytest.mark.asyncio
-async def test_decrease_allowance_underflow():
+async def test_fail_decrease_allowance_underflow():
     _, erc20, owner, friend = await erc20_factory()
     ## Overflows - will try to subtract 1 from 0
     await assert_invoked_revert(erc20.decrease_allowance(friend.contract_address, uint(1)), owner.contract_address)
 
 
 @pytest.mark.asyncio
-async def test_decrease_allowance_zero_spender():
+async def test_fail_decrease_allowance_zero_spender():
     _, erc20, owner, _ = await erc20_factory()
     await assert_invoked_revert(erc20.decrease_allowance(0, uint(0)), owner.contract_address)
 
