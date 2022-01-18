@@ -1,5 +1,4 @@
 %lang starknet
-%builtins pedersen range_check ecdsa bitwise
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin, BitwiseBuiltin
 from starkware.starknet.common.syscalls import get_caller_address
