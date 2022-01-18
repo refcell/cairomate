@@ -32,6 +32,18 @@ func _decimals() -> (decimals: felt):
 end
 
 #############################################
+##                 EVENTS                  ##
+#############################################
+
+@event
+func transfer(sender: felt, recipient: felt, amount: uint256):
+end
+
+@event
+func approval(owner: felt, spender: felt, amount: uint256):
+end
+
+#############################################
 ##               ERC20 STORE               ##
 #############################################
 
@@ -46,18 +58,6 @@ end
 @storage_var
 func _allowances(owner: felt, spender: felt) -> (allowance: Uint256):
 end
-
-#############################################
-##             EIP 2612 STORE              ##
-#############################################
-
-## TODO: EIP-2612
-
-#     bytes32 public constant PERMIT_TYPEHASH =
-#         keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
-#     uint256 internal immutable INITIAL_CHAIN_ID;
-#     bytes32 internal immutable INITIAL_DOMAIN_SEPARATOR;
-#     mapping(address => uint256) public nonces;
 
 #############################################
 ##               CONSTRUCTOR               ##
@@ -105,7 +105,8 @@ func approve{
     ## EFFECTS ##
     _allowances.write(caller, spender, amount)
 
-    ## NO INTERACTIONS ##
+    ## Emit the approval event ##
+    approval.emit(owner=caller, spender=spender, amount=amount)
 
     return (1) # Starknet's `true`
 end
@@ -133,6 +134,9 @@ func increase_allowance{
     uint256_check(new_allowance)
     _allowances.write(caller, spender, new_allowance)
 
+    ## Emit the approval event ##
+    approval.emit(owner=caller, spender=spender, amount=amount)
+
     return (1) # Starknet's `true`
 end
 
@@ -159,6 +163,9 @@ func decrease_allowance{
     assert_not_zero(spender)
     uint256_check(new_allowance)
     _allowances.write(caller, spender, new_allowance)
+
+    ## Emit the approval event ##
+    approval.emit(owner=caller, spender=spender, amount=amount)
 
     return (1) # Starknet's `true`
 end
@@ -203,6 +210,9 @@ func transfer_from{
     let (new_allowance: Uint256) = uint256_sub(caller_allowance, amount)
     _allowances.write(sender, caller, new_allowance)
 
+    ## Emit the transfer event ##
+    transfer.emit(sender=sender, recipient=recipient, amount=amount)
+
     return (1) # Starknet's `true`
 end
 
@@ -237,7 +247,8 @@ func _transfer{
     let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, amount)
     _balances.write(recipient, new_recipient_balance)
 
-    ## NO INTERACTIONS ##
+    ## Emit the transfer event ##
+    transfer.emit(sender=sender, recipient=recipient, amount=amount)
 
     return ()
 end

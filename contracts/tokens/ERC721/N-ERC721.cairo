@@ -24,6 +24,22 @@ func _symbol() -> (symbol: felt):
 end
 
 #############################################
+##                 EVENTS                  ##
+#############################################
+
+@event
+func transfer(sender: felt, recipient: felt, tokenId: felt):
+end
+
+@event
+func approval(owner: felt, approved: felt, tokenId: felt):
+end
+
+@event
+func approval_for_all(owner: felt, operator: felt, approved: felt):
+end
+
+#############################################
 ##                 STORAGE                 ##
 #############################################
 
@@ -46,22 +62,6 @@ end
 @storage_var
 func _is_approved_for_all(owner: felt, spender: felt) -> (approved: felt):
 end
-
-#############################################
-##             EIP 2612 STORE              ##
-#############################################
-
-## TODO: EIP-2612
-
-# bytes32 public constant PERMIT_TYPEHASH =
-#     keccak256("Permit(address spender,uint256 token_id,uint256 nonce,uint256 deadline)");
-# bytes32 public constant PERMIT_ALL_TYPEHASH =
-#     keccak256("Permit(address owner,address spender,uint256 nonce,uint256 deadline)");
-# uint256 internal immutable INITIAL_CHAIN_ID;
-# bytes32 internal immutable INITIAL_DOMAIN_SEPARATOR;
-# mapping(uint256 => uint256) public nonces;
-# mapping(address => uint256) public noncesForAll;
-
 
 #############################################
 ##               CONSTRUCTOR               ##
@@ -109,6 +109,10 @@ func approve{
     assert can_approve = 1
 
     _token_approvals.write(token_id, spender)
+
+    ## Emit the approval event ##
+    approval.emit(owner=caller, approved=spender, tokenId=token_id)
+
     return ()
 end
 
@@ -123,6 +127,10 @@ func set_approval_for_all{
 ):
     let (caller) = get_caller_address()
     _is_approved_for_all.write(caller, operator, approved)
+
+    ## Emit the approval event ##
+    approval_for_all.emit(owner=caller, operator=operator, approved=approved)
+
     return ()
 end
 
@@ -150,6 +158,9 @@ func transfer{
     _owners.write(token_id, recipient)
 
     _token_approvals.write(token_id, 0)
+
+    ## Emit the transfer event ##
+    transfer.emit(sender=caller, recipient=recipient, tokenId=token_id)
 
     return ()
 end
@@ -200,6 +211,9 @@ func transfer_from{
     _owners.write(token_id, recipient)
 
     _token_approvals.write(token_id, 0)
+
+    ## Emit the transfer event ##
+    transfer.emit(sender=sender, recipient=recipient, tokenId=token_id)
 
     return ()
 end
