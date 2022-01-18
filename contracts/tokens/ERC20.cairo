@@ -32,6 +32,18 @@ func _decimals() -> (decimals: felt):
 end
 
 #############################################
+##                 EVENTS                  ##
+#############################################
+
+@event
+func transfer(sender: felt, recipient: felt, amount: uint256):
+end
+
+@event
+func approval(owner: felt, spender: felt, amount: uint256):
+end
+
+#############################################
 ##               ERC20 STORE               ##
 #############################################
 
@@ -105,7 +117,8 @@ func approve{
     ## EFFECTS ##
     _allowances.write(caller, spender, amount)
 
-    ## NO INTERACTIONS ##
+    # Emit the approval event ##
+    approval.emit(owner=caller, spender=spender, amount=amount)
 
     return (1) # Starknet's `true`
 end
@@ -133,6 +146,9 @@ func increase_allowance{
     uint256_check(new_allowance)
     _allowances.write(caller, spender, new_allowance)
 
+    ## Emit the approval event ##
+    approval.emit(owner=caller, spender=spender, amount=amount)
+
     return (1) # Starknet's `true`
 end
 
@@ -159,6 +175,9 @@ func decrease_allowance{
     assert_not_zero(spender)
     uint256_check(new_allowance)
     _allowances.write(caller, spender, new_allowance)
+
+    ## Emit the approval event ##
+    approval.emit(owner=caller, spender=spender, amount=amount)
 
     return (1) # Starknet's `true`
 end
@@ -203,6 +222,9 @@ func transfer_from{
     let (new_allowance: Uint256) = uint256_sub(caller_allowance, amount)
     _allowances.write(sender, caller, new_allowance)
 
+    ## Emit the transfer event ##
+    transfer.emit(sender=sender, recipient=recipient, amount=amount)
+
     return (1) # Starknet's `true`
 end
 
@@ -237,7 +259,8 @@ func _transfer{
     let (new_recipient_balance, _: Uint256) = uint256_add(recipient_balance, amount)
     _balances.write(recipient, new_recipient_balance)
 
-    ## NO INTERACTIONS ##
+    ## Emit the transfer event ##
+    transfer.emit(sender=sender, recipient=recipient, amount=amount)
 
     return ()
 end
