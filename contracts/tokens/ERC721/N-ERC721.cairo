@@ -9,7 +9,7 @@ from starkware.cairo.common.bitwise import bitwise_or
 ## @title N-ERC721
 ## @description A minimalistic implementation of ERC721 Token Standard using only felts.
 ## @description Adapted from Solmate: https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol
-## @authors Alucard <github.com/a5f9t4> exp.table <github.com/exp-table>
+## @authors andreas <andreas@nascent.xyz> exp.table <github.com/exp-table>
 
 #############################################
 ##                METADATA                 ##
@@ -252,6 +252,7 @@ func _burn{
 
     return ()
 end
+
 #############################################
 ##                ACCESSORS                ##
 #############################################

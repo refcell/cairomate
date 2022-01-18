@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Structured, dependable legos for starknet development.",
   "main": "index.js",
-  "repository": "https://github.com/a5f9t4/cairomate.git",
-  "author": "Alucard <https://github.com/a5f9t4>",
+  "repository": "https://github.com/abigger87/cairomate.git",
+  "author": "velleity <https://github.com/abigger87>",
   "license": "AGPL-3.0-only",
   "private": false,
   "scripts": {

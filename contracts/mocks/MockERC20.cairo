@@ -10,10 +10,71 @@ from starkware.cairo.common.uint256 import (
     Uint256, uint256_add, uint256_sub, uint256_le, uint256_lt, uint256_check
 )
 
-## @title ERC20
-## @description A minimalistic implementation of ERC20 Token Standard.
-## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
+## @title Mock ERC20
+## @description Practical implementation of an ERC20 token.
 ## @author andreas <andreas@nascent.xyz>
+
+
+#############################################
+##                OWNABLE                  ##
+#############################################
+
+@storage_var
+func _owner() -> (owner: felt):
+end
+
+## CONSTRUCTOR
+@constructor
+func constructor{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(
+    name: felt,
+    symbol: felt,
+    decimals: felt, # 18
+    total_supply: Uint256,
+    owner: felt,
+):
+    _name.write(name)
+    _symbol.write(symbol)
+    _decimals.write(decimals)
+    _total_supply.write(total_supply)
+    _owner.write(owner)
+    return ()
+end
+
+## Mint
+@external
+func mint{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(receiver: felt, amount: Uint256):
+    let (caller) = get_caller_address()
+    let (owner) = _owner.read()
+    assert caller = owner
+    let (previous_receiver_balance) = _balances.read(receiver)
+    let (new_receiver_balance, _: Uint256) = uint256_add(previous_receiver_balance, amount)
+    _balances.write(receiver, new_receiver_balance)
+    return ()
+end
+
+@view
+func owner{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}() -> (owner: felt):
+    let (owner: felt) = _owner.read()
+    return (owner)
+end
+
+# ERC20 Implementation Below
+#############################################
+#############################################
+#############################################
+
 
 #############################################
 ##                METADATA                 ##
@@ -63,23 +124,23 @@ end
 ##               CONSTRUCTOR               ##
 #############################################
 
-@constructor
-func constructor{
-    syscall_ptr: felt*,
-    pedersen_ptr: HashBuiltin*,
-    range_check_ptr
-}(
-    name: felt,
-    symbol: felt,
-    decimals: felt, # 18
-    total_supply: Uint256,
-):
-    _name.write(name)
-    _symbol.write(symbol)
-    _decimals.write(decimals)
-    _total_supply.write(total_supply)
-    return ()
-end
+# @constructor
+# func constructor{
+#     syscall_ptr: felt*,
+#     pedersen_ptr: HashBuiltin*,
+#     range_check_ptr
+# }(
+#     name: felt,
+#     symbol: felt,
+#     decimals: felt, # 18
+#     total_supply: Uint256,
+# ):
+#     _name.write(name)
+#     _symbol.write(symbol)
+#     _decimals.write(decimals)
+#     _total_supply.write(total_supply)
+#     return ()
+# end
 
 #############################################
 ##               ERC20 LOGIC               ##
@@ -162,7 +223,6 @@ func decrease_allowance{
 
     return (1) # Starknet's `true`
 end
-
 
 @external
 func transfer{

@@ -3,7 +3,7 @@
 ## @title Account Interface
 ## @description An interface for the Account implementation.
 ## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
-## @author Alucard <github.com/a5f9t4>
+## @author andreas <andreas@nascent.xyz>
 
 @contract_interface
 namespace IAccount:

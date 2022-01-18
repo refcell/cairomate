@@ -5,7 +5,7 @@ from starkware.cairo.common.uint256 import Uint256
 ## @title ERC165 Interface
 ## @description An interface for the ERC165 standard.
 ## @description Specification: https://eips.ethereum.org/EIPS/eip-165
-## @author Alucard <github.com/a5f9t4>
+## @author andreas <andreas@nascent.xyz>
 
 @contract_interface
 namespace IERC165:

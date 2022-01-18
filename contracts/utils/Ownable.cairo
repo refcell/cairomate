@@ -6,7 +6,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 ## @title Ownable
 ## @description A mirror of the Openzeppelin Ownable pattern
 ## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
-## @author Alucard <github.com/a5f9t4>
+## @author andreas <andreas@nascent.xyz>
 
 #############################################
 ##                STORAGE                  ##

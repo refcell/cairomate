@@ -2,8 +2,8 @@
 
 from starkware.cairo.common.uint256 import Uint256
 
-## @title ERC721 Interface
-## @description An interface for the ERC721 standard.
+## @title N-ERC721 Interface
+## @description An interface for ERC721 using only felts.
 ## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
 ## @author andreas <andreas@nascent.xyz>
 
@@ -20,16 +20,16 @@ namespace IERC721:
     func symbol() -> (symbol: felt):
     end
 
-    func total_supply() -> (total_supply: Uint256):
+    func total_supply() -> (total_supply: felt):
     end
 
     func owner_of(token_id: felt) -> (owner: felt):
     end
 
-    func balance_of(owner: felt) -> (balance: Uint256):
+    func balance_of(owner: felt) -> (balance: felt):
     end
 
-    func get_approved(token_id: Uint256) -> (spender: felt):
+    func get_approved(token_id: felt) -> (spender: felt):
     end
 
     func is_approved_for_all(owner: felt, operator: felt) -> (approved: felt):
@@ -39,19 +39,19 @@ namespace IERC721:
     ##                 MUTATORS                ##
     #############################################
 
-    func transfer(recipient: felt, token_id: Uint256):
+    func transfer(recipient: felt, token_id: felt):
     end
 
     func transfer_from(
             sender: felt,
             recipient: felt,
-            token_id: Uint256
+            token_id: felt
         ):
     end
 
     func set_approval_for_all(operator: felt, approved: felt):
     end
 
-    func approve(spender: felt, token_id: Uint256):
+    func approve(spender: felt, token_id: felt):
     end
 end
