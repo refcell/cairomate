@@ -1,2 +1,2 @@
-cairo-lang==0.6.2
+cairo-lang==0.7.0
 cairo-nile==0.3.0

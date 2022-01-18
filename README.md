@@ -36,12 +36,6 @@ tests
 └─ test_Ownable - "Test Ownable contract"
 ```
 
-## Directions
-
-- [ ] Flashloan using the Lending Pool
-- [ ] Flexible, permissionless AMM (maybe erc1155 based like [Helios](https://github.com/z0r0z/Helios))
-- [ ] Lending Pool Yield Rebalancer (aka Yield Aggregator)
-
 ## Installation
 
 ### First time?
