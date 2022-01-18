@@ -1,4 +1,4 @@
-# cairomate • [![Tests](https://github.com/a5f9t4/cairomate/actions/workflows/tests.yml/badge.svg)](https://github.com/a5f9t4/cairomate/actions/workflows/tests.yml) [![Lints](https://github.com/a5f9t4/cairomate/actions/workflows/lints.yml/badge.svg)](https://github.com/a5f9t4/cairomate/actions/workflows/lints.yml) ![GitHub](https://img.shields.io/github/license/a5f9t4/cairomate) ![GitHub package.json version](https://img.shields.io/github/package-json/v/a5f9t4/cairomate)
+# cairomate • [![Tests](https://github.com/abigger87/cairomate/actions/workflows/tests.yml/badge.svg)](https://github.com/abigger87/cairomate/actions/workflows/tests.yml) [![Lints](https://github.com/abigger87/cairomate/actions/workflows/lints.yml/badge.svg)](https://github.com/abigger87/cairomate/actions/workflows/lints.yml) ![GitHub](https://img.shields.io/github/license/abigger87/cairomate) ![GitHub package.json version](https://img.shields.io/github/package-json/v/abigger87/cairomate)
 
 
 **Structured**, **dependable** legos for starknet development.
@@ -69,7 +69,7 @@ Clone the repository
 
 
 ```bash
-git clone git@github.com:a5f9t4/cairomate.git
+git clone git@github.com:abigger87/cairomate.git
 ```
 
 `cd` into it and create a Python virtual environment:
