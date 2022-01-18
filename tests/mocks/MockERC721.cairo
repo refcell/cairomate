@@ -11,7 +11,7 @@ from starkware.cairo.common.uint256 import Uint256, uint256_sub, uint256_add
 ## @description A minimalistic implementation of ERC721 Token Standard.
 ## @dev Uses the common uint256 type for compatibility with the base evm.
 ## @description Adapted from OpenZeppelin's Cairo Contracts: https://github.com/OpenZeppelin/cairo-contracts
-## @author andreas <andreas@nascent.xyz> exp.table <github.com/exp-table>
+## @author velleity <github.com/a5f9t4> exp.table <github.com/exp-table>
 
 #############################################
 ##                METADATA                 ##
@@ -30,7 +30,7 @@ end
 #############################################
 
 @storage_var
-func _total_supply() -> (total_supply: Uint256):
+func _total_supply() -> (_total_supply: Uint256):
 end
 
 @storage_var
@@ -212,6 +212,32 @@ func transfer_from{
     return ()
 end
 
+@external
+func mint{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    recipient: felt,
+    token_id: Uint256
+):
+    _mint(recipient, token_id)
+    return ()
+end
+
+@external
+func burn{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+    range_check_ptr
+}(
+    token_id: Uint256
+):
+    _burn(token_id)
+    return ()
+end
 #############################################
 ##             INTERNAL LOGIC              ##
 #############################################
@@ -308,6 +334,7 @@ func owner_of{
     let (owner) = _owners.read(token_id)
     return (owner)
 end
+
 
 @view
 func balance_of{
