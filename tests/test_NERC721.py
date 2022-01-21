@@ -28,7 +28,9 @@ async def ownable_factory():
         "tests/mocks/MockNERC721.cairo",
         constructor_calldata=[
             str_to_felt("Test Contract"),
-            str_to_felt("TEST")
+            str_to_felt("TEST"),
+            str_to_felt("ipfs://"),
+            str_to_felt("hashkek")
         ]
     )
     return starknet, erc721, owner, friend
@@ -41,6 +43,11 @@ async def test_constructor():
     assert expected_name.result.name == str_to_felt("Test Contract")
     expected_symbol = await erc721.symbol().call()
     assert expected_symbol.result.symbol == str_to_felt("TEST")
+    expected_base_uri = await erc721.token_uri(0).call()
+    print (expected_base_uri.result.token_uri)
+    assert expected_base_uri.result.token_uriprefix == str_to_felt("ipfs://")
+    assert expected_base_uri.result.token_uri.suffix == str_to_felt("hashkek")
+    assert expected_base_uri.result.token_uri.token_id == 0
 
 
 @pytest.mark.asyncio

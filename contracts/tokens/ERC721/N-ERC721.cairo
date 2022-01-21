@@ -11,6 +11,23 @@ from starkware.cairo.common.bitwise import bitwise_or
 ## @authors andreas <andreas@nascent.xyz> exp.table <github.com/exp-table>
 
 #############################################
+##                STRUCTS                  ##
+#############################################
+
+# in two parts because each felt can store a string of 31 bytes max
+# an IPFS hash is 46 bytes long
+struct baseURI:
+    member prefix : felt
+    member suffix : felt
+end
+
+struct tokenURI:
+    member prefix : felt
+    member suffix : felt
+    member token_id : felt
+end
+
+#############################################
 ##                METADATA                 ##
 #############################################
 
@@ -43,6 +60,10 @@ end
 #############################################
 
 @storage_var
+func _base_uri() -> (base_uri: baseURI):
+end
+
+@storage_var
 func _total_supply() -> (total_supply: felt):
 end
 
@@ -73,10 +94,12 @@ func constructor{
     range_check_ptr
 }(
     name: felt,
-    symbol: felt
+    symbol: felt,
+    base_uri: baseURI
 ):
     _name.write(name)
     _symbol.write(symbol)
+    _base_uri.write(base_uri)
 
     return()
 end
@@ -291,6 +314,17 @@ func symbol{
 end
 
 @view
+func token_uri{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(token_id: felt) -> (token_uri: tokenURI):
+    let (base_uri : baseURI) = _base_uri.read()
+    let token_uri = tokenURI(base_uri.prefix, base_uri.suffix, token_id)
+    return (token_uri)
+end
+
+@view
 func total_supply{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
@@ -339,3 +373,4 @@ func is_approved_for_all{
     let (approved) = _is_approved_for_all.read(owner, operator)
     return (approved)
 end
+
