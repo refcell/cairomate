@@ -11,6 +11,23 @@ from starkware.cairo.common.bitwise import bitwise_or
 ## @authors andreas <andreas@nascent.xyz> exp.table <github.com/exp-table>
 
 #############################################
+##                STRUCTS                  ##
+#############################################
+
+# in two parts because each felt can store a string of 31 bytes max
+# an IPFS hash is 46 bytes long
+struct baseURI:
+    member prefix : felt
+    member suffix : felt
+end
+
+struct tokenURI:
+    member prefix : felt
+    member suffix : felt
+    member token_id : felt
+end
+
+#############################################
 ##                METADATA                 ##
 #############################################
 
@@ -27,20 +44,24 @@ end
 #############################################
 
 @event
-func transfer(sender: felt, recipient: felt, tokenId: felt):
+func Transfer(sender: felt, recipient: felt, token_id: felt):
 end
 
 @event
-func approval(owner: felt, approved: felt, tokenId: felt):
+func Approval(owner: felt, approved: felt, token_id: felt):
 end
 
 @event
-func approval_for_all(owner: felt, operator: felt, approved: felt):
+func Approval_For_All(owner: felt, operator: felt, approved: felt):
 end
 
 #############################################
 ##                 STORAGE                 ##
 #############################################
+
+@storage_var
+func _base_uri() -> (base_uri: baseURI):
+end
 
 @storage_var
 func _total_supply() -> (total_supply: felt):
@@ -73,10 +94,12 @@ func constructor{
     range_check_ptr
 }(
     name: felt,
-    symbol: felt
+    symbol: felt,
+    base_uri: baseURI
 ):
     _name.write(name)
     _symbol.write(symbol)
+    _base_uri.write(base_uri)
 
     return()
 end
@@ -109,8 +132,8 @@ func approve{
 
     _token_approvals.write(token_id, spender)
 
-    ## Emit the approval event ##
-    approval.emit(owner=caller, approved=spender, tokenId=token_id)
+    ## Emit the Approval event ##
+    Approval.emit(caller, spender, token_id)
 
     return ()
 end
@@ -127,8 +150,8 @@ func set_approval_for_all{
     let (caller) = get_caller_address()
     _is_approved_for_all.write(caller, operator, approved)
 
-    ## Emit the approval event ##
-    approval_for_all.emit(owner=caller, operator=operator, approved=approved)
+    ## Emit the Approval event ##
+    Approval_For_All.emit(caller, operator, approved)
 
     return ()
 end
@@ -158,8 +181,8 @@ func transfer{
 
     _token_approvals.write(token_id, 0)
 
-    ## Emit the transfer event ##
-    transfer.emit(sender=caller, recipient=recipient, tokenId=token_id)
+    ## Emit the Transfer event ##
+    Transfer.emit(sender, recipient, token_id)
 
     return ()
 end
@@ -211,8 +234,8 @@ func transfer_from{
 
     _token_approvals.write(token_id, 0)
 
-    ## Emit the transfer event ##
-    transfer.emit(sender=sender, recipient=recipient, tokenId=token_id)
+    ## Emit the Transfer event ##
+    Transfer.emit(sender, recipient, token_id)
 
     return ()
 end
@@ -291,6 +314,17 @@ func symbol{
 end
 
 @view
+func token_uri{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(token_id: felt) -> (token_uri: tokenURI):
+    let (base_uri : baseURI) = _base_uri.read()
+    let token_uri = tokenURI(base_uri.prefix, base_uri.suffix, token_id)
+    return (token_uri)
+end
+
+@view
 func total_supply{
     syscall_ptr: felt*,
     pedersen_ptr: HashBuiltin*,
@@ -339,3 +373,4 @@ func is_approved_for_all{
     let (approved) = _is_approved_for_all.read(owner, operator)
     return (approved)
 end
+

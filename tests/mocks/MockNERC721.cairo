@@ -8,7 +8,24 @@ from starkware.cairo.common.bitwise import bitwise_or
 ## @title N-ERC721
 ## @description A minimalistic implementation of ERC721 Token Standard using only felts.
 ## @description Adapted from Solmate: https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol
-## @authors Alucard <github.com/a5f9t4> exp.table <github.com/exp-table>
+## @authors andreas <andreas@nascent.xyz> exp.table <github.com/exp-table>
+
+#############################################
+##                STRUCTS                  ##
+#############################################
+
+# in two parts because each felt can store a string of 31 bytes max
+# an IPFS hash is 46 bytes long
+struct baseURI:
+    member prefix : felt
+    member suffix : felt
+end
+
+struct tokenURI:
+    member prefix : felt
+    member suffix : felt
+    member token_id : felt
+end
 
 #############################################
 ##                METADATA                 ##
@@ -23,8 +40,28 @@ func _symbol() -> (symbol: felt):
 end
 
 #############################################
+##                 EVENTS                  ##
+#############################################
+
+@event
+func Transfer(sender: felt, recipient: felt, token_id: felt):
+end
+
+@event
+func Approval(owner: felt, approved: felt, token_id: felt):
+end
+
+@event
+func Approval_For_All(owner: felt, operator: felt, approved: felt):
+end
+
+#############################################
 ##                 STORAGE                 ##
 #############################################
+
+@storage_var
+func _base_uri() -> (base_uri: baseURI):
+end
 
 @storage_var
 func _total_supply() -> (total_supply: felt):
@@ -47,22 +84,6 @@ func _is_approved_for_all(owner: felt, spender: felt) -> (approved: felt):
 end
 
 #############################################
-##             EIP 2612 STORE              ##
-#############################################
-
-## TODO: EIP-2612
-
-# bytes32 public constant PERMIT_TYPEHASH =
-#     keccak256("Permit(address spender,uint256 token_id,uint256 nonce,uint256 deadline)");
-# bytes32 public constant PERMIT_ALL_TYPEHASH =
-#     keccak256("Permit(address owner,address spender,uint256 nonce,uint256 deadline)");
-# uint256 internal immutable INITIAL_CHAIN_ID;
-# bytes32 internal immutable INITIAL_DOMAIN_SEPARATOR;
-# mapping(uint256 => uint256) public nonces;
-# mapping(address => uint256) public noncesForAll;
-
-
-#############################################
 ##               CONSTRUCTOR               ##
 #############################################
 
@@ -73,10 +94,12 @@ func constructor{
     range_check_ptr
 }(
     name: felt,
-    symbol: felt
+    symbol: felt,
+    base_uri: baseURI
 ):
     _name.write(name)
     _symbol.write(symbol)
+    _base_uri.write(base_uri)
 
     return()
 end
@@ -108,6 +131,10 @@ func approve{
     assert can_approve = 1
 
     _token_approvals.write(token_id, spender)
+
+    ## Emit the Approval event ##
+    Approval.emit(caller, spender, token_id)
+
     return ()
 end
 
@@ -122,6 +149,10 @@ func set_approval_for_all{
 ):
     let (caller) = get_caller_address()
     _is_approved_for_all.write(caller, operator, approved)
+
+    ## Emit the Approval event ##
+    Approval_For_All.emit(caller, operator, approved)
+
     return ()
 end
 
@@ -149,6 +180,9 @@ func transfer{
     _owners.write(token_id, recipient)
 
     _token_approvals.write(token_id, 0)
+
+    ## Emit the Transfer event ##
+    Transfer.emit(sender, recipient, token_id)
 
     return ()
 end
@@ -200,9 +234,11 @@ func transfer_from{
 
     _token_approvals.write(token_id, 0)
 
+    ## Emit the Transfer event ##
+    Transfer.emit(sender, recipient, token_id)
+
     return ()
 end
-
 
 @external
 func mint{
@@ -230,7 +266,6 @@ func burn{
     _burn(token_id)
     return ()
 end
-
 
 #############################################
 ##             INTERNAL LOGIC              ##
@@ -280,6 +315,7 @@ func _burn{
 
     return ()
 end
+
 #############################################
 ##                ACCESSORS                ##
 #############################################
@@ -302,6 +338,17 @@ func symbol{
 }() -> (symbol: felt):
     let (symbol) = _symbol.read()
     return (symbol)
+end
+
+@view
+func token_uri{
+    syscall_ptr: felt*,
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(token_id: felt) -> (token_uri: tokenURI):
+    let (base_uri : baseURI) = _base_uri.read()
+    let token_uri = tokenURI(base_uri.prefix, base_uri.suffix, token_id)
+    return (token_uri)
 end
 
 @view
@@ -353,3 +400,4 @@ func is_approved_for_all{
     let (approved) = _is_approved_for_all.read(owner, operator)
     return (approved)
 end
+
