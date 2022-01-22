@@ -43,11 +43,10 @@ async def test_constructor():
     assert expected_name.result.name == str_to_felt("Test Contract")
     expected_symbol = await erc721.symbol().call()
     assert expected_symbol.result.symbol == str_to_felt("TEST")
-    expected_base_uri = await erc721.token_uri(0).call()
-    print (expected_base_uri.result.token_uri)
-    assert expected_base_uri.result.token_uriprefix == str_to_felt("ipfs://")
-    assert expected_base_uri.result.token_uri.suffix == str_to_felt("hashkek")
-    assert expected_base_uri.result.token_uri.token_id == 0
+    expected_token_uri = await erc721.token_uri(0).call()
+    assert expected_token_uri.result.token_uri.prefix == str_to_felt("ipfs://")
+    assert expected_token_uri.result.token_uri.suffix == str_to_felt("hashkek")
+    assert expected_token_uri.result.token_uri.token_id == 0
 
 
 @pytest.mark.asyncio

@@ -44,15 +44,15 @@ end
 #############################################
 
 @event
-func transfer(sender: felt, recipient: felt, tokenId: felt):
+func Transfer(sender: felt, recipient: felt, token_id: felt):
 end
 
 @event
-func approval(owner: felt, approved: felt, tokenId: felt):
+func Approval(owner: felt, approved: felt, token_id: felt):
 end
 
 @event
-func approval_for_all(owner: felt, operator: felt, approved: felt):
+func Approval_For_All(owner: felt, operator: felt, approved: felt):
 end
 
 #############################################
@@ -132,8 +132,8 @@ func approve{
 
     _token_approvals.write(token_id, spender)
 
-    ## Emit the approval event ##
-    approval.emit(owner=caller, approved=spender, tokenId=token_id)
+    ## Emit the Approval event ##
+    Approval.emit(caller, spender, token_id)
 
     return ()
 end
@@ -150,8 +150,8 @@ func set_approval_for_all{
     let (caller) = get_caller_address()
     _is_approved_for_all.write(caller, operator, approved)
 
-    ## Emit the approval event ##
-    approval_for_all.emit(owner=caller, operator=operator, approved=approved)
+    ## Emit the Approval event ##
+    Approval_For_All.emit(caller, operator, approved)
 
     return ()
 end
@@ -181,8 +181,8 @@ func transfer{
 
     _token_approvals.write(token_id, 0)
 
-    ## Emit the transfer event ##
-    transfer.emit(sender=caller, recipient=recipient, tokenId=token_id)
+    ## Emit the Transfer event ##
+    Transfer.emit(sender, recipient, token_id)
 
     return ()
 end
@@ -234,8 +234,8 @@ func transfer_from{
 
     _token_approvals.write(token_id, 0)
 
-    ## Emit the transfer event ##
-    transfer.emit(sender=sender, recipient=recipient, tokenId=token_id)
+    ## Emit the Transfer event ##
+    Transfer.emit(sender, recipient, token_id)
 
     return ()
 end
