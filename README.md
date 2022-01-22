@@ -51,11 +51,11 @@ brew install gmp # mac
 
 For VSCode support:
 
-Download `cairo-0.6.2.vsix` from https://github.com/starkware-libs/cairo-lang/releases/tag/v0.6.2
+Download `cairo-0.7.0.vsix` from https://github.com/starkware-libs/cairo-lang/releases/tag/v0.7.0
 
 And run:
 ```bash
-code --install-extension cairo-0.6.2.vsix
+code --install-extension cairo-0.7.0.vsix
 ```
 
 ### Set up the project
