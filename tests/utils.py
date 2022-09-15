@@ -6,21 +6,45 @@ from starkware.crypto.signature.signature import private_to_stark_key, sign
 from starkware.starknet.definitions.error_codes import StarknetErrorCode
 from starkware.starkware_utils.error_handling import StarkException
 from starkware.starknet.public.abi import get_selector_from_name
+import math
 
 MAX_UINT256 = (2**128 - 1, 2**128 - 1)
-
+PRIME = 3618502788666131213697322783095070105623107215331596699973092056135872020481
+PRIME_HALF = PRIME / 2
+FP_SCALE = 2 ** 61
 
 def str_to_felt(text):
     b_text = bytes(text, 'UTF-8')
     return int.from_bytes(b_text, "big")
 
-
 def uint(a):
     return(a, 0)
 
-
 def uint_add(a, b):
     return(a[0] + b[0], a[1] + b[1])
+
+
+def to_felt(num): 
+    if num < 0:
+        return num - PRIME
+    else:
+        return num
+
+def felt_to_64x61(felt):
+    scaled = felt * FP_SCALE
+    assert (scaled <= 2 ** 125) and (scaled > -2**125)
+    return scaled
+
+def fp_64x61_to_felt(fp):
+    # a negative fp number is represented as {actual number + PRIME}
+    if fp > PRIME_HALF:
+        res = fp - PRIME
+    else:
+        res = fp
+    return int(res / FP_SCALE)
+
+def is_fp_close(fp_1, fp_2):
+    return math.isclose(fp_1, fp_2, rel_tol=1e-6)
 
 async def assert_invoked_revert(fun, caller):
     try:
